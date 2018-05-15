@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ImageServiceGUI.Model
 {
@@ -11,7 +12,12 @@ namespace ImageServiceGUI.Model
         {
             Settings settingsObject = tcpClient.SettingObj;
             m_LogName = settingsObject.LogName;
-            m_Handlers = settingsObject.Handlers.Split(';');
+            m_Handlers = new ObservableCollection<string>();
+            string[] hendlers = settingsObject.Handlers.Split(';');
+            for (int i = 0; i < hendlers.Length; i++)
+            {
+                m_Handlers.Add(hendlers[i]);
+            }
             m_SourceName = settingsObject.SourceName;
             m_OutputDir = settingsObject.OutputDir;
             m_ThumbnailSize = settingsObject.ThumbSize;
@@ -32,6 +38,7 @@ namespace ImageServiceGUI.Model
             set
             {
                 m_OutputDir = value;
+                this.NotifyPropertyChanged("OutputDir");
             }
         }
         private string m_LogName;
@@ -44,6 +51,7 @@ namespace ImageServiceGUI.Model
             set
             {
                 m_LogName = value;
+                this.NotifyPropertyChanged("LogName");
             }
         }
         private string m_SourceName;
@@ -56,6 +64,7 @@ namespace ImageServiceGUI.Model
             set
             {
                 m_SourceName = value;
+                this.NotifyPropertyChanged("SourceName");
             }
         }
         private string m_ThumbnailSize;
@@ -68,10 +77,11 @@ namespace ImageServiceGUI.Model
             set
             {
                 m_ThumbnailSize = value;
+                this.NotifyPropertyChanged("ThumbnailSize");
             }
         }
-        private string[] m_Handlers;
-        public string[] Handlers
+        private ObservableCollection<string> m_Handlers;
+        public ObservableCollection<string> Handlers
         {
             get
             {

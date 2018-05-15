@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Runtime.Serialization.Json;
 using System.Xml.Serialization;
+using System.Windows.Input;
 
 public class TcpTimeServer
 {
@@ -34,11 +35,26 @@ public class TcpTimeServer
             {
                 byte[] bytes = new byte[1024];
                 bytesRead = stream.Read(bytes, 0, bytes.Length);
+                m_logging.Log("bytesRead", ImageService.Logging.Modal.MessageTypeEnum.INFO);
                 str = Encoding.ASCII.GetString(bytes, 0, bytesRead);
             } while (str != "close");
         }        
         this.client.Close();
     }
+    /*public string GetCommand()
+    {
+        string str;
+        int bytesRead = 0;
+        using (NetworkStream stream = client.GetStream())
+        using (BinaryReader reader = new BinaryReader(stream))
+        using (BinaryWriter writer = new BinaryWriter(stream))
+        {
+            byte[] bytes = new byte[1024];
+            bytesRead = stream.Read(bytes, 0, bytes.Length);
+            str = Encoding.ASCII.GetString(bytes, 0, bytesRead);
+        }
+        return str;
+    }*/
     
     public void Close()
     {

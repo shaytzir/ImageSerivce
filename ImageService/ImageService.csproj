@@ -81,7 +81,6 @@
     <Compile Include="ImageService\Server\ImageServer.cs" />
     <Compile Include="ImageService\Program.cs" />
     <Compile Include="ImageService\Server\TcpTimeServer.cs" />
-    <Compile Include="ImageService\Settings.cs" />
     <Compile Include="Infrastructure\Enums\CommandEnum.cs" />
     <Compile Include="Logging\ILoggingService.cs" />
     <Compile Include="Logging\LoggingService.cs" />

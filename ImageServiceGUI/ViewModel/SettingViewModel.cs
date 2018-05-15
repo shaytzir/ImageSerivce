@@ -2,6 +2,7 @@
 using Microsoft.Practices.Prism.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -14,8 +15,9 @@ namespace ImageServiceGUI.ViewModels
         #endregion
         protected void NotifyPropertyChanged(string name)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            var command = this.SubmitCommand as DelegateCommand<object>;
+            command.RaiseCanExecuteChanged();
         }
         private SettingModel _SettingModel;
         public ICommand SubmitCommand { get; private set; }
@@ -27,57 +29,38 @@ namespace ImageServiceGUI.ViewModels
             SettingModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
-            this.VM_Handlers = this._SettingModel.Handlers;
         }
 
         public SettingModel SettingModel
         {
             get { return this._SettingModel; }
-            set
-            {
-                this._SettingModel = value;
-            }
         }
 
-        public string VM_OutputDir;
-        public string OutputDir
+        public string VM_OutputDir
         {
             get { return this._SettingModel.OutputDir; }
-            set
-            {
-                this.VM_OutputDir = value;
-            }
         }
-        public string VM_SourceName;
-        public string SourceName
+        public string VM_SourceName
         {
             get { return this._SettingModel.SourceName; }
-            set
-            {
-                this.VM_SourceName = value;
-            }
         }
-        public string VM_LogName;
-        public string LogName
+        public string VM_LogName
         {
             get { return this._SettingModel.LogName; }
-            set
-            {
-                this.VM_LogName = value;
-            }
         }
-        public string VM_ThumbnailSize;
-        public string ThumbnailSize
+        public string VM_ThumbnailSize
         {
             get
             {
-                return this._SettingModel.ThumbnailSize; }
-            set
-            {
-                this.VM_ThumbnailSize = value;
+                return this._SettingModel.ThumbnailSize;
             }
         }
-        public string[] VM_Handlers { get; set; }
+        public ObservableCollection<string> VM_Handlers {
+            get
+            {
+                return this._SettingModel.Handlers;
+            }
+        }
         private string handlerToRemove;
         public string VM_HandlersToRemove {
             get
@@ -87,19 +70,20 @@ namespace ImageServiceGUI.ViewModels
             set
             {
                 this.handlerToRemove = value;
-                this._SettingModel.RemoveHendler(value);
+                this.NotifyPropertyChanged("handlerToRemove");
             }
         }
         private void OnDelete(object obj)
         {
+            this._SettingModel.RemoveHendler(this.handlerToRemove);
         }
         private bool CanDelete(object obj)
         {
-            if (string.IsNullOrEmpty(this.handlerToRemove))
+            if (this.handlerToRemove != null)
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
 
     }

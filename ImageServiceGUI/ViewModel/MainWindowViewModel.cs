@@ -12,23 +12,12 @@ namespace ImageServiceGUI.ViewModels
         public MainWindowViewModel()
         {
             this.SettingViewModel = new SettingViewModel();
-            this.SettingViewModel.PropertyChanged += PropertyChanged;
-        }
-
-        private void PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var command = this.RemoveCommand as DelegateCommand<object>;
-            command.RaiseCanExecuteChanged();
+            //this.SettingViewModel.PropertyChanged += PropertyChanged;
         }
 
         public ICommand RemoveCommand { get; private set; }
 
         public SettingViewModel SettingViewModel { get; set; }
-
-        private void OnReset()
-        {
-            this.SettingViewModel.SettingModel = new SettingModel();
-        }
 
         private string BuildResultString()
         {

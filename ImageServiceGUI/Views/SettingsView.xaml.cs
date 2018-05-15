@@ -18,7 +18,7 @@ namespace ImageServiceGUI.Views
             InitializeComponent();
             this.settingViewModel = new SettingViewModel();
             this.DataContext = this.settingViewModel;
-            string[] handlersList = settingViewModel.VM_Handlers;
+            /*string[] handlersList = settingViewModel.VM_Handlers;
             for(int i = 0; i < handlersList.Length; i++)
             {
                 if (handlersList[i] != "")
@@ -43,6 +43,7 @@ namespace ImageServiceGUI.Views
             {
                 this.settingViewModel.VM_HandlersToRemove = LBHandlers.SelectedItem as string;
             }
+        }*/
         }
     }
 }

@@ -13,6 +13,7 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
+using System.Windows.Input;
 
 namespace ImageService.Server
 {
@@ -123,6 +124,8 @@ namespace ImageService.Server
             TcpTimeServer tcpServer = new TcpTimeServer();
             tcpServer.Start(this.m_logging);
             tcpServer.Send(Encoding.ASCII.GetBytes(this.settingsObj.ToJSON()), this.m_logging);
+            //string command = tcpServer.GetCommand();
+            //m_logging.Log(command, Logging.Modal.MessageTypeEnum.INFO);
         }
         internal class Settings
         {
