@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService", "ImageService\ImageService.csproj", "{361731A3-D979-41FE-8525-1FDC83EB34FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageServiceGUI", "ImageServiceGUI\ImageServiceGUI.csproj", "{95C34CCE-BD96-4C19-8F3C-DB723C261ACC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{361731A3-D979-41FE-8525-1FDC83EB34FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{361731A3-D979-41FE-8525-1FDC83EB34FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{361731A3-D979-41FE-8525-1FDC83EB34FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{361731A3-D979-41FE-8525-1FDC83EB34FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95C34CCE-BD96-4C19-8F3C-DB723C261ACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95C34CCE-BD96-4C19-8F3C-DB723C261ACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95C34CCE-BD96-4C19-8F3C-DB723C261ACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95C34CCE-BD96-4C19-8F3C-DB723C261ACC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D78B4587-C0CE-4600-BCF0-0804A46206D0}
+	EndGlobalSection
+EndGlobal

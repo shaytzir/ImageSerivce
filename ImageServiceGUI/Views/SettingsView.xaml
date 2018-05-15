@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="ImageServiceGUI.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
+    <Grid x:Name="LayoutRoot">
+        <ScrollViewer Grid.Row="0"
+                      Grid.ColumnSpan="3"
+                      VerticalAlignment="Stretch">
+            <Grid>
+                <Grid Grid.Row="1"
+                      Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+                <StackPanel Grid.Row="2"
+                      Margin="5">
+                    <TextBlock x:Name="OutputDir" Grid.Row="0" Grid.Column="0"> <Run Text="Output Directory: " FontStyle="Italic" /> <Run Text="{Binding OutputDir}" /></TextBlock>
+                    <TextBlock x:Name="SourceName" Grid.Row="1" Grid.Column="0"> <Run Text="Source Name: " FontStyle="Italic" /> <Run Text="{Binding SourceName}" /></TextBlock>
+                    <TextBlock x:Name="LogName" Grid.Row="2" Grid.Column="0"> <Run Text="Log Name: " FontStyle="Italic" /> <Run Text="{Binding LogName}" /></TextBlock>
+                    <TextBlock x:Name="ThumbnailSize" Grid.Row="3" Grid.Column="0"> <Run Text="Thumbnail Size: " FontStyle="Italic" /> <Run Text="{Binding ThumbnailSize}" /></TextBlock>
+                    <StackPanel Grid.Row="5">
+                        <Button Name="btnRemoveHandler" Command="{Binding SubmitCommand}" Click="btnRemoveHandler_Click">Remove</Button>
+                    </StackPanel>
+                    <Border Grid.Row="20"
+                            Style="{StaticResource BorderBrush}" Margin="0,5,0,-5">
+                        <ListBox x:Name="LBHandlers"
+                                 IsTabStop="False"
+                                 ItemsSource="{Binding VM_Handlers}"
+                                 Margin="5"
+                                 SelectedItem="{Binding SettingViewModel.VM_HandlersToRemove, Mode=TwoWay}" SelectionChanged="Handlers_SelectionChanged">
+                        </ListBox>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
