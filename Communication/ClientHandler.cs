@@ -17,26 +17,19 @@ namespace Communication
     public class ClientHandler : IClientHandler
     {
         public event EventHandler<string> GotCommandFromGui;
-        //private CancellationTokenSource tokenSource = new CancellationTokenSource();
-        // private CancellationToken tokenSource;
         public event EventHandler HandlerClosed;
         private TcpClient client;
         private NetworkStream stream;
         private BinaryReader reader;
         private BinaryWriter writer;
         private bool connected;
+        private static Mutex m_mutex = new Mutex();
 
-        public BinaryWriter Writer => this.writer;
-        public void Close()
-        {
-            connected = false;
-            this.reader.Close();
-            this.writer.Close();
-            this.stream.Close();
-            this.client.Close();
-            this.HandlerClosed?.Invoke(this,null);
-        }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="acceptedOnServer">the tcp client that was accepted on the tcpServer</param>
         public ClientHandler(TcpClient acceptedOnServer)
         {
             this.client = acceptedOnServer;
@@ -46,45 +39,43 @@ namespace Communication
             connected = true;
         }
 
+        /// <summary>
+        /// Handles the client - trying to read messages from client.
+        /// </summary>
         public void HandleClient()
         {
             new Task(() =>
             {
-
                 while (connected)
                 {
                     try
                     {
-                        bool result;
                         string input = reader.ReadString();
-                        //DebugClientHandler?.Invoke(this, input);
-                        if (input != "") 
-                        {
-                            string debug = input;
-                            GotCommandFromGui?.Invoke(this, input);
-                        }
+                        GotCommandFromGui?.Invoke(this, input);
+                        
                     } catch (Exception e)
                     {
                         Close();
-
-                       // DebugClientHandler?.Invoke(this, "exception in reviece debug client handler " + e);
-                        //this.tokenSource.Cancel();
-                        //  m_logger.Log("Server failed due to: " + e.Message, MessageTypeEnum.FAIL);
                     }
                 }
-                //}, this.tokenSource.Token).Start();
             }).Start();
 
 
         }
 
+        /// <summary>
+        /// Sends the command to the client.
+        /// </summary>
+        /// <param name="commandToTcpClient">The command to TCP client.</param>
         public void SendCommand(string commandToTcpClient)
         {
-
             new Task(() => {
                 try
                 {
+                    //locks the writer
+                    m_mutex.WaitOne();
                     this.writer.Write(commandToTcpClient);
+                    m_mutex.ReleaseMutex();
                 }
                 catch (Exception e)
                 {
@@ -93,9 +84,18 @@ namespace Communication
             }).Start();
 
         }
-        public BinaryWriter GetWriter()
+
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
+        public void Close()
         {
-            return this.writer;
+            connected = false;
+            this.reader.Close();
+            this.writer.Close();
+            this.stream.Close();
+            this.client.Close();
+            this.HandlerClosed?.Invoke(this, null);
         }
     }
 }

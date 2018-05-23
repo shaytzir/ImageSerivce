@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Infrastructure;
 using System.Diagnostics;
+using System.Threading;
 
 public sealed class TcpTimeClient
 {
@@ -20,7 +21,8 @@ public sealed class TcpTimeClient
     bool connected;
     private string ip;
     private int port;
-    //private static TcpTimeClient instance;
+    private static Mutex m_mutex = new Mutex();
+
 
     private Settings _SettingObj;
 
@@ -31,19 +33,11 @@ public sealed class TcpTimeClient
         this.port = 8006;
     }
 
-    public Settings SettingObj
-    {
-        get { return _SettingObj; }
-        set { _SettingObj = value; }
-    }
-   // private static readonly TcpTimeClient instance = new TcpTimeClient();
-
-   /* private TcpTimeClient() {
-       // this._SettingObj = new Settings();
-        Start();
-    }*/
 
 
+    /// <summary>
+    /// starts the client -  tries to connect
+    /// </summary>
     public void Start()
     {
         try
@@ -54,8 +48,8 @@ public sealed class TcpTimeClient
             this.ns = this.client.GetStream();
             this.reader = new BinaryReader(this.ns);
             this.writer = new BinaryWriter(this.ns);
-
             connected = true;
+            //try commands from the server
             RecieveCommand();
 
         }
@@ -67,6 +61,12 @@ public sealed class TcpTimeClient
         
     }
 
+    /// <summary>
+    /// Gets a value indicating whether this TcpTimeClientis connected.
+    /// </summary>
+    /// <value>
+    ///   true if connected; otherwise,false.
+    /// </value>
     public bool Connected
     {
         get
@@ -75,19 +75,19 @@ public sealed class TcpTimeClient
         }
     }
 
-    private void ReadString()
-    {
-        byte[] bytes = new byte[1024];
-        int bytesRead = this.ns.Read(bytes, 0, bytes.Length);
-        string str = Encoding.ASCII.GetString(bytes, 0, bytesRead);
-        this.SettingObj = new Settings();
-        JObject fromJson = JObject.Parse(str);
-        SettingObj.LogName = (string) fromJson["LogName"];
-        SettingObj.OutputDir = (string)fromJson["OutputDir"];
-        SettingObj.SourceName = (string)fromJson["SourceName"];
-        SettingObj.ThumbSize = (string)fromJson["ThumbSize"];
-        SettingObj.Handlers = (string)fromJson["Handlers"];
-    }
+    /* private void ReadString()
+     {
+         byte[] bytes = new byte[1024];
+         int bytesRead = this.ns.Read(bytes, 0, bytes.Length);
+         string str = Encoding.ASCII.GetString(bytes, 0, bytesRead);
+         this.SettingObj = new Settings();
+         JObject fromJson = JObject.Parse(str);
+         SettingObj.LogName = (string) fromJson["LogName"];
+         SettingObj.OutputDir = (string)fromJson["OutputDir"];
+         SettingObj.SourceName = (string)fromJson["SourceName"];
+         SettingObj.ThumbSize = (string)fromJson["ThumbSize"];
+         SettingObj.Handlers = (string)fromJson["Handlers"];
+     }*/
 
     /* public void SendCommand(string command)
      {
@@ -100,17 +100,19 @@ public sealed class TcpTimeClient
 
 
 
-    /*
-     * should add mutxes? + using the instance of the server?????????? DEBUG
-     * */
 
+    /// <summary>
+    /// Sends the command.
+    /// </summary>
+    /// <param name="jsonCommandInfo">The json command information.</param>
     public void SendCommand(string jsonCommandInfo)
     {
-
         new Task(() => {
             try
             {
+                m_mutex.WaitOne();
                 this.writer.Write(jsonCommandInfo);
+                m_mutex.ReleaseMutex();
             } catch (Exception e)
             {
                 Console.WriteLine("DEBUG in SendCommand in TcpTImeClient");
@@ -119,36 +121,35 @@ public sealed class TcpTimeClient
 
     }
 
+    /// <summary>
+    /// reads commands from the server.
+    /// </summary>
     public void RecieveCommand()
     {
-
         new Task(() =>
         {
+            //as long as this client is connected
             while (connected)
             {
                 try
                 {
                     string response = this.reader.ReadString();
-                    
-                    if (response != "")
-                    {
-                        //CommandInfo responseObj = CommandInfo.ParseJSON(response);
-                        //InfoFromServer?.Invoke(this, responseObj);
-                        InfoFromServer?.Invoke(this, response);
-                    }
+                    InfoFromServer?.Invoke(this, response);
                 }
                 catch (Exception e)
                 {
-
-
+                    this.connected = false;
                 }
             }
         }).Start();
-
     }
 
+    /// <summary>
+    /// Closes this instance.
+    /// </summary>
     public void Close()
     {
+        this.connected = false;
         this.client.Close();
     }
 }

@@ -1,15 +1,9 @@
-﻿using Infrastructure;
-using Infrastructure.Enums;
+﻿using Infrastructure.Enums;
 using Infrastructure.Event;
 using System;
 using System.Configuration;
 using System.Text;
-using System.Threading;
-using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
-using System.Windows.Input;
 using Communication;
 using System.Threading.Tasks;
 using ImageService.Controller.Handlers;
@@ -30,8 +24,6 @@ namespace ImageService.Server
         private ILoggingService m_logging;
         private TcpTimeServer tcpServer;
         private string[] seperatedPaths;
-        private byte[] toClient = { };
-        private Settings settingsObj;
         #endregion
 
         #region Properties
@@ -47,7 +39,6 @@ namespace ImageService.Server
         /// <param name="logger">logging service</param>
         public ImageServer(ILoggingService logger)
         {
-            string str = "";
             System.Text.Encoding enc = System.Text.Encoding.ASCII;
             this.m_logging = logger;
             //split all directories to handle from the appconfig
@@ -68,11 +59,8 @@ namespace ImageService.Server
             foreach (string path in seperatedPaths)
             {
                 CreateHandler(path);
-                str = enc.GetString(toClient);
-                toClient = Encoding.ASCII.GetBytes(str + path + ";");
             }
-
-           // ClientHandler.DebugClientHandler += this.LogTheFuckingMessageDebug;
+            //creates the tcpServer and register to it's events of getting a new client and reciving commands
             new Task(() =>
             {
                 this.tcpServer = new TcpTimeServer();
@@ -80,11 +68,6 @@ namespace ImageService.Server
                 this.tcpServer.PassInfoFromClientHandlerToServer += this.GetCommandFromService;
                 this.tcpServer.Start();
             }).Start();
-        }
-
-        private void LogTheFuckingMessageDebug(object sender, string e)
-        {
-            this.m_logging.Log(e, Logging.Modal.MessageTypeEnum.INFO);
         }
 
         /// <summary>
@@ -107,13 +90,17 @@ namespace ImageService.Server
         /// <param name="sender">who invoked the event called this func</param>
         /// <param name="args">info</param>
         public void ClosingServer(object sender, DirectoryCloseEventArgs args)
-        { 
+        {
             bool result;
             //log the relevant message
             m_logging.Log(args.Message, Logging.Modal.MessageTypeEnum.INFO);
             IDirectoryHandler handler = (IDirectoryHandler)sender;
+            //calls the controller to remove the directory from
+            //the config so it wont be showing at the next connecting client
             string[] forRemove = { args.DirectoryPath };
-            this.m_controller.ExecuteCommand((int)CommandEnum.RemoveHandlerFromConfig,forRemove, out result);
+            string deleteFromConfig = this.m_controller.
+                ExecuteCommand((int)CommandEnum.RemoveHandlerFromConfig, forRemove, out result);
+            this.m_logging.Log(deleteFromConfig, Logging.Modal.MessageTypeEnum.INFO);
             //unsubscribe the functions from relevant events
             CommandRecieved -= handler.OnCommandRecieved;
             handler.DirectoryClose -= ClosingServer;
@@ -131,12 +118,19 @@ namespace ImageService.Server
                     CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, path);
                 this.CommandRecieved?.Invoke(this, closeCommandArgs);
             }
+            this.tcpServer.Close();
         }
 
+
+        /// <summary>
+        /// Gets a command to execute and called the service proj to do it.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="jsonCommand">The json command.</param>
         private void GetCommandFromService(object sender, string jsonCommand)
         {
             JObject json = JsonConvert.DeserializeObject<JObject>(jsonCommand);
-           if ((int)json["CommandID"] == (int)CommandEnum.CloseCommand)
+            if ((int)json["CommandID"] == (int)CommandEnum.CloseCommand)
             {
                 CommandRecievedEventArgs args = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, (string)json["Handler"]);
                 this.CommandRecieved?.Invoke(this, args);
@@ -144,14 +138,20 @@ namespace ImageService.Server
             }
         }
 
+
+        /// <summary>
+        /// Sends the settings and log.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="client">The client.</param>
         private void SendSettingsAndLog(object sender, IClientHandler client)
         {
             bool success;
+            //genertate string (serialize to json of all settings from the appconfig)
             string setting = m_controller.ExecuteCommand((int)CommandEnum.GetConfigCommand, null, out success);
-           // IClientHandler handler = (IClientHandler)sender;
             client.SendCommand(setting);
         }
 
-        
+
     }
 }

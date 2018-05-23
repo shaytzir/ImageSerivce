@@ -13,36 +13,50 @@ namespace ImageServiceGUI.Model
 {
     public class SettingModel : INotifyPropertyChanged
     {
-        #region Notify Changed
+
         public event PropertyChangedEventHandler PropertyChanged;
         private GuiClient guiClient;
 
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public SettingModel()
         {
             this.Handlers = new ObservableCollection<string>();
             this.guiClient = GuiClient.Instance;
-
+            //when the client recieves informtaion from the server call the handle function
             guiClient.Comm.InfoFromServer += HandleServerCommands;
         }
 
-        private void HandleServerCommands(object sender, string msg)
+        /// <summary>
+        /// Handles the server commands.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="commandFromSrv">The command the server sent</param>
+        private void HandleServerCommands(object sender, string commandFromSrv)
         {
-            JObject json = JsonConvert.DeserializeObject<JObject>(msg);
+            JObject json = JsonConvert.DeserializeObject<JObject>(commandFromSrv);
             int commandID = (int)json["CommandID"];
+            //if it send the configuration info
             if (commandID == (int)CommandEnum.GetConfigCommand)
             {
-                UpdateConfig(msg);   
+                UpdateConfig(commandFromSrv);  
+                //if it closed a directory
             } else if (commandID == (int)CommandEnum.CloseCommand)
             {
-                removeHandler(msg);
+                RemoveHandler(commandFromSrv);
             }
 
         }
 
-        public void removeHandler(string msg)
+        /// <summary>
+        /// Removes the handler.
+        /// </summary>
+        /// <param name="commanFromSrv">The MSG.</param>
+        public void RemoveHandler(string commanFromSrv)
         {
-            JObject json = JsonConvert.DeserializeObject<JObject>(msg);
+            JObject json = JsonConvert.DeserializeObject<JObject>(commanFromSrv);
             try
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -56,9 +70,14 @@ namespace ImageServiceGUI.Model
                 Console.WriteLine(e.Message);
             }
         }
-        private void UpdateConfig(string msg)
+
+        /// <summary>
+        /// Updates the configuration.
+        /// </summary>
+        /// <param name="CommandFromSrv">The MSG.</param>
+        private void UpdateConfig(string CommandFromSrv)
         {
-            JObject json = JsonConvert.DeserializeObject<JObject>(msg);
+            JObject json = JsonConvert.DeserializeObject<JObject>(CommandFromSrv);
             try
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -83,13 +102,23 @@ namespace ImageServiceGUI.Model
 
             }
         }
+        /// <summary>
+        /// Called when  a property changed.
+        /// </summary>
+        /// <param name="name">The name.</param>
         protected void OnPropertyChanged(string name)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
-        #endregion
+
         private string m_OutputDir;
+        /// <summary>
+        /// Gets or sets the output dir.
+        /// </summary>
+        /// <value>
+        /// The output dir.
+        /// </value>
         public string OutputDir
         {
             get
@@ -103,6 +132,12 @@ namespace ImageServiceGUI.Model
             }
         }
         private string m_LogName;
+        /// <summary>
+        /// Gets or sets the name of the log.
+        /// </summary>
+        /// <value>
+        /// The name of the log.
+        /// </value>
         public string LogName
         {
             get
@@ -116,6 +151,12 @@ namespace ImageServiceGUI.Model
             }
         }
         private string m_SourceName;
+        /// <summary>
+        /// Gets or sets the name of the source.
+        /// </summary>
+        /// <value>
+        /// The name of the source.
+        /// </value>
         public string SourceName
         {
             get
@@ -129,6 +170,12 @@ namespace ImageServiceGUI.Model
             }
         }
         private string m_ThumbnailSize;
+        /// <summary>
+        /// Gets or sets the size of the thumbnail.
+        /// </summary>
+        /// <value>
+        /// The size of the thumbnail.
+        /// </value>
         public string ThumbnailSize
         {
             get
@@ -146,6 +193,12 @@ namespace ImageServiceGUI.Model
 
 
         private string handlerToRemove;
+        /// <summary>
+        /// Gets or sets the handlers to remove.
+        /// </summary>
+        /// <value>
+        /// The handlers to remove.
+        /// </value>
         public string _HandlersToRemove
         {
             get
@@ -158,16 +211,13 @@ namespace ImageServiceGUI.Model
                 OnPropertyChanged("_HandlersToRemove");
             }
         }
+        /// <summary>
+        /// Notifies the property changed.
+        /// </summary>
+        /// <param name="propName">Name of the property.</param>
         public void NotifyPropertyChanged(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
-
-
-
-        public void SendCommand(CommandRecievedEventArgs message)
-        {
-      //      this.tcpClient.SendCommand(message);
         }
     }
 }

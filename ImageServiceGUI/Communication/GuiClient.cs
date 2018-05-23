@@ -12,6 +12,12 @@ namespace ImageServiceGUI.Communication
         private bool connected;
         public TcpTimeClient Comm { get; set; }
 
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
+        /// <value>
+        /// The instance.
+        /// </value>
         public static GuiClient Instance
         {
             get
@@ -25,6 +31,9 @@ namespace ImageServiceGUI.Communication
         }
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GuiClient"/> class.
+        /// </summary>
         public GuiClient()
         {
             //debug
@@ -35,6 +44,12 @@ namespace ImageServiceGUI.Communication
 
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this "GuiClient" is connected.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if connected; otherwise, <c>false</c>.
+        /// </value>
         public bool Connected
         {
             get
@@ -43,7 +58,5 @@ namespace ImageServiceGUI.Communication
             }
             set { this.connected = value; }
         }
-
-
     }
 }

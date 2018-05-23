@@ -10,17 +10,24 @@ namespace ImageServiceGUI.ViewModels
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         private MainWindowModel model;
+        /// <summary>
+        /// Initializes a new instance of the MainWindowViewModel class.
+        /// </summary>
         public MainWindowViewModel()
-        {
+        { 
             this.model = new MainWindowModel();
             model.PropertyChanged +=
                 delegate (Object sender, PropertyChangedEventArgs e)
                 {
                     NotifyPropertyChanged("VM_" + e.PropertyName);
                 };
-            //this.SettingViewModel = new SettingViewModel();
-            //this.SettingViewModel.PropertyChanged += PropertyChanged;
         }
+        /// <summary>
+        /// sets the color of the background depends on the connection
+        /// </summary>
+        /// <value>
+        /// the color of the background
+        /// </value>
         public string VM_Connected
         {
             get
@@ -35,12 +42,23 @@ namespace ImageServiceGUI.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets the remove command.
+        /// </summary>
+        /// <value>
+        /// The remove command.
+        /// </value>
         public ICommand RemoveCommand { get; private set; }
 
-        public SettingViewModel SettingViewModel { get; set; }
-
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Notifies the property changed.
+        /// </summary>
+        /// <param name="propName">Name of the property.</param>
         public void NotifyPropertyChanged(string propName)
         {
             if (this.PropertyChanged != null)
