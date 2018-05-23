@@ -25,6 +25,7 @@ namespace ImageService.Controller
             this.commands = new Dictionary<int, ICommand>();
             commands.Add((int)CommandEnum.NewFileCommand, new NewFileCommand(m_modal));
             commands.Add((int)CommandEnum.GetConfigCommand, new GetConfigCommand(m_modal));
+            commands.Add((int)CommandEnum.RemoveHandlerFromConfig, new RemoveHandlerFromConfig(m_modal));
         }
 
         /// <summary>

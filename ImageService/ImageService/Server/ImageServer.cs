@@ -72,8 +72,7 @@ namespace ImageService.Server
                 toClient = Encoding.ASCII.GetBytes(str + path + ";");
             }
 
-            ClientHandler.DebugClientHandler += this.LogTheFuckingMessageDebug;
-           // ClientHandler.GotCommandFromGui += this.GetCommandFromService;
+           // ClientHandler.DebugClientHandler += this.LogTheFuckingMessageDebug;
             new Task(() =>
             {
                 this.tcpServer = new TcpTimeServer();
@@ -108,10 +107,13 @@ namespace ImageService.Server
         /// <param name="sender">who invoked the event called this func</param>
         /// <param name="args">info</param>
         public void ClosingServer(object sender, DirectoryCloseEventArgs args)
-        {
+        { 
+            bool result;
             //log the relevant message
             m_logging.Log(args.Message, Logging.Modal.MessageTypeEnum.INFO);
             IDirectoryHandler handler = (IDirectoryHandler)sender;
+            string[] forRemove = { args.DirectoryPath };
+            this.m_controller.ExecuteCommand((int)CommandEnum.RemoveHandlerFromConfig,forRemove, out result);
             //unsubscribe the functions from relevant events
             CommandRecieved -= handler.OnCommandRecieved;
             handler.DirectoryClose -= ClosingServer;
@@ -134,9 +136,6 @@ namespace ImageService.Server
         private void GetCommandFromService(object sender, string jsonCommand)
         {
             JObject json = JsonConvert.DeserializeObject<JObject>(jsonCommand);
-           // string commandID = (string)json["CommandID"];
-          //  string closeCommand = CommandEnum.CloseCommand.ToString();
-           // if (commandID.Equals(closeCommand))
            if ((int)json["CommandID"] == (int)CommandEnum.CloseCommand)
             {
                 CommandRecievedEventArgs args = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, (string)json["Handler"]);

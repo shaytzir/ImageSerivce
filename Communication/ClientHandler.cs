@@ -17,19 +17,24 @@ namespace Communication
     public class ClientHandler : IClientHandler
     {
         public event EventHandler<string> GotCommandFromGui;
-        public static event EventHandler<string> DebugClientHandler;
-        private CancellationTokenSource tokenSource = new CancellationTokenSource();
+        //private CancellationTokenSource tokenSource = new CancellationTokenSource();
         // private CancellationToken tokenSource;
+        public event EventHandler HandlerClosed;
         private TcpClient client;
         private NetworkStream stream;
         private BinaryReader reader;
         private BinaryWriter writer;
-        public Mutex M_mutex { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        private bool connected;
 
         public BinaryWriter Writer => this.writer;
         public void Close()
         {
-            throw new NotImplementedException();
+            connected = false;
+            this.reader.Close();
+            this.writer.Close();
+            this.stream.Close();
+            this.client.Close();
+            this.HandlerClosed?.Invoke(this,null);
         }
 
         public ClientHandler(TcpClient acceptedOnServer)
@@ -38,6 +43,7 @@ namespace Communication
             this.stream = client.GetStream();
             this.reader = new BinaryReader(stream, Encoding.ASCII);
             this.writer = new BinaryWriter(stream, Encoding.ASCII);
+            connected = true;
         }
 
         public void HandleClient()
@@ -45,13 +51,13 @@ namespace Communication
             new Task(() =>
             {
 
-                while (true)
+                while (connected)
                 {
                     try
                     {
                         bool result;
                         string input = reader.ReadString();
-                        DebugClientHandler?.Invoke(this, input);
+                        //DebugClientHandler?.Invoke(this, input);
                         if (input != "") 
                         {
                             string debug = input;
@@ -59,12 +65,16 @@ namespace Communication
                         }
                     } catch (Exception e)
                     {
-                        DebugClientHandler?.Invoke(this, "exception in reviece debug client handler " + e);
-                        this.tokenSource.Cancel();
+                        Close();
+
+                       // DebugClientHandler?.Invoke(this, "exception in reviece debug client handler " + e);
+                        //this.tokenSource.Cancel();
                         //  m_logger.Log("Server failed due to: " + e.Message, MessageTypeEnum.FAIL);
                     }
                 }
-            }, this.tokenSource.Token).Start();
+                //}, this.tokenSource.Token).Start();
+            }).Start();
+
 
         }
 

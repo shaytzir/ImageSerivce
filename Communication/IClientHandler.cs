@@ -22,6 +22,6 @@ namespace Communication
         void SendCommand(string commandToTcpClient);
         BinaryWriter GetWriter();
         void Close();
-        Mutex M_mutex { get; set; }
+      //  Mutex M_mutex { get; set; }
     }
 }

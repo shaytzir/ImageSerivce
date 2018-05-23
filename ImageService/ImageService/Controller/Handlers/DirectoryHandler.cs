@@ -150,7 +150,7 @@ namespace ImageService.Controller.Handlers
                     watcher.EnableRaisingEvents = false;
                 }
                 //log that this directory is closed
-                message = m_path + " closed";
+                message = m_path + "is no longer watched";
                 DirectoryCloseEventArgs closing = new DirectoryCloseEventArgs(m_path, message);
                 DirectoryClose?.Invoke(this, closing);
             }

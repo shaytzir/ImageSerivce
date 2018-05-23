@@ -66,9 +66,12 @@ namespace ImageServiceGUI.Model
                     this.LogName = (string)json["LogName"];
                     string handlersConnected = (string)json["Handlers"];
                     string[] handlers = handlersConnected.Split(';');
-                    for (int i = 0; i < handlers.Length; i++)
+                    if (!handlers[0].Equals(""))
                     {
-                        this.Handlers.Add(handlers[i]);
+                        for (int i = 0; i < handlers.Length; i++)
+                        {
+                            this.Handlers.Add(handlers[i]);
+                        }
                     }
                     this.SourceName = (string)json["SourceName"];
                     this.OutputDir = (string)json["OutputDir"];

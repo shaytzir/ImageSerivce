@@ -372,5 +372,34 @@ namespace ImageService.Modal
             string output = JsonConvert.SerializeObject(obj);
             return output;
         }
+
+        public string RemoveHandlerFromConfig(string handler, out bool result)
+        {
+            result = true;
+            Configuration m_Configuration = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            string oldHandlersConnected = ConfigurationManager.AppSettings["Handler"];
+            string[] oldHandlers = oldHandlersConnected.Split(';');
+           m_Configuration.AppSettings.Settings.Remove("Handler");
+            StringBuilder newHandlers = new StringBuilder();
+            newHandlers.Append("");
+            foreach (string h in oldHandlers)
+            {
+                if (!h.Equals(handler))
+                {
+                    newHandlers.Append(h);
+                    newHandlers.Append(';');
+                }
+            }
+            string newHandlesString = newHandlers.ToString();
+            ConfigurationManager.AppSettings.Set("Handler", newHandlesString);
+         //   return "removed " + handler + " from appConfig";
+
+
+            /*Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            configuration.AppSettings.Settings["Handler"].Value = newHandlesString;
+            configuration.Save();
+            ConfigurationManager.RefreshSection("appSettings");*/
+            return "removed " + handler + " from appConfig";
+        }
     }
 }

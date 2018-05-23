@@ -34,6 +34,7 @@ namespace ImageServiceGUI.ViewModels
                 }
             }
         }
+
         public ICommand RemoveCommand { get; private set; }
 
         public SettingViewModel SettingViewModel { get; set; }
@@ -46,11 +47,5 @@ namespace ImageServiceGUI.ViewModels
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
 
-       /* private string BuildResultString()
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.Append(this.SettingViewModel.SettingModel.Handlers);
-            return builder.ToString();
-        }*/
     }
 }

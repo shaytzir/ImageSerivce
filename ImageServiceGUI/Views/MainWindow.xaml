@@ -5,24 +5,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:ImageServiceGUI.Views"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="MVVM"
         Height="350"
         Width="525">
-
-    <Grid>
-        <Grid x:Name="LayoutRoot"
+    <Grid x:Name="LayoutRoot"
           Background="{Binding VM_Connected}">
-            <Grid MinWidth="300"
+        <Grid MinWidth="300"
               MaxWidth="800">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0"
                         Orientation="Horizontal">
-                    <TextBlock HorizontalAlignment="Center"
+                <TextBlock HorizontalAlignment="Center"
                            Width="Auto"
                            Text="Settings"
                            FontWeight="Normal"
@@ -30,14 +29,13 @@
                            FontSize="24"
                            FontFamily="Comic Sans MS"
                            VerticalAlignment="Center" />
-                </StackPanel>
-                <TabControl>
-            <TabItem Header="Settings">
-                <views:SettingsView/>
-            </TabItem>
-            <TabItem Header="Logs" />
-        </TabControl>
-    </Grid>
+            </StackPanel>
+            <TabControl>
+                <TabItem Header="Settings">
+                    <views:SettingsView/>
+                </TabItem>
+                <TabItem Header="Logs" />
+            </TabControl>
         </Grid>
     </Grid>
 </Window>

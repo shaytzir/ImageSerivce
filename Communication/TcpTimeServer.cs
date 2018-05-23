@@ -48,7 +48,10 @@ public class TcpTimeServer
                     TcpClient client = listener.AcceptTcpClient();
                     ClientHandler newHandler = new ClientHandler(client);
                     newHandler.GotCommandFromGui += this.PassInfoFromClientHandlerToServer;
+                    newHandler.HandlerClosed += this.RemoveHandlerFromList;
+                    m_mutex.WaitOne();
                     ch.Add(newHandler);
+                    m_mutex.ReleaseMutex();
                     NewClientConnected?.Invoke(this, newHandler);
                     newHandler.HandleClient();
                 }
@@ -59,6 +62,14 @@ public class TcpTimeServer
         });
         task.Start();
 
+    }
+
+    private void RemoveHandlerFromList(object sender, EventArgs e)
+    {
+        IClientHandler handlerToRemove = (IClientHandler)sender;
+        m_mutex.WaitOne();
+        this.ch.Remove(handlerToRemove);
+        m_mutex.ReleaseMutex();
     }
 
 
@@ -103,7 +114,7 @@ public class TcpTimeServer
     {
         Task task = new Task(() =>
         {
-
+            m_mutex.WaitOne();
             foreach (IClientHandler handler in ch)
             {
                 try
@@ -116,6 +127,7 @@ public class TcpTimeServer
                     Console.WriteLine(e);
                 }
             }
+            m_mutex.ReleaseMutex();
         });
         task.Start();
 
