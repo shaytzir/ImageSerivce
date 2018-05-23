@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageServiceGUI.Model
+namespace Infrastructure
 {
     public class Settings
     {

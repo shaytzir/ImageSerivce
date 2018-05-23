@@ -1,5 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Infrastructure.Event;
+using Infrastructure;
+using ImageServiceGUI.Communication;
+using System;
+using Infrastructure.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Windows;
 
 namespace ImageServiceGUI.Model
 {
@@ -7,20 +15,70 @@ namespace ImageServiceGUI.Model
     {
         #region Notify Changed
         public event PropertyChangedEventHandler PropertyChanged;
-        private TcpTimeClient tcpClient = TcpTimeClient.Instance;
+        private GuiClient guiClient;
+
+
         public SettingModel()
         {
-            Settings settingsObject = tcpClient.SettingObj;
-            m_LogName = settingsObject.LogName;
-            m_Handlers = new ObservableCollection<string>();
-            string[] hendlers = settingsObject.Handlers.Split(';');
-            for (int i = 0; i < hendlers.Length; i++)
+            this.Handlers = new ObservableCollection<string>();
+            this.guiClient = GuiClient.Instance;
+
+            guiClient.Comm.InfoFromServer += HandleServerCommands;
+        }
+
+        private void HandleServerCommands(object sender, string msg)
+        {
+            JObject json = JsonConvert.DeserializeObject<JObject>(msg);
+            int commandID = (int)json["CommandID"];
+            if (commandID == (int)CommandEnum.GetConfigCommand)
             {
-                m_Handlers.Add(hendlers[i]);
+                UpdateConfig(msg);   
+            } else if (commandID == (int)CommandEnum.CloseCommand)
+            {
+                removeHandler(msg);
             }
-            m_SourceName = settingsObject.SourceName;
-            m_OutputDir = settingsObject.OutputDir;
-            m_ThumbnailSize = settingsObject.ThumbSize;
+
+        }
+
+        public void removeHandler(string msg)
+        {
+            JObject json = JsonConvert.DeserializeObject<JObject>(msg);
+            try
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    string handlerToRemove = (string)json["Handler"];
+                    Handlers.Remove(handlerToRemove);
+                }));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+        private void UpdateConfig(string msg)
+        {
+            JObject json = JsonConvert.DeserializeObject<JObject>(msg);
+            try
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.LogName = (string)json["LogName"];
+                    string handlersConnected = (string)json["Handlers"];
+                    string[] handlers = handlersConnected.Split(';');
+                    for (int i = 0; i < handlers.Length; i++)
+                    {
+                        this.Handlers.Add(handlers[i]);
+                    }
+                    this.SourceName = (string)json["SourceName"];
+                    this.OutputDir = (string)json["OutputDir"];
+                    this.ThumbnailSize = (string)json["ThumbSize"];
+                }));
+            }
+            catch (Exception e)
+            {
+
+            }
         }
         protected void OnPropertyChanged(string name)
         {
@@ -80,18 +138,10 @@ namespace ImageServiceGUI.Model
                 this.NotifyPropertyChanged("ThumbnailSize");
             }
         }
-        private ObservableCollection<string> m_Handlers;
-        public ObservableCollection<string> Handlers
-        {
-            get
-            {
-                return m_Handlers;
-            }
-            set
-            {
-                this.NotifyPropertyChanged("Handlers");
-            }
-        }
+
+        public ObservableCollection<string> Handlers { get; set; }
+
+
         private string handlerToRemove;
         public string _HandlersToRemove
         {
@@ -107,12 +157,14 @@ namespace ImageServiceGUI.Model
         }
         public void NotifyPropertyChanged(string propName)
         {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
-        public void RemoveHendler(string handler)
+
+
+
+        public void SendCommand(CommandRecievedEventArgs message)
         {
-            tcpClient.SendCommand("Remove " + handler);
+      //      this.tcpClient.SendCommand(message);
         }
     }
 }

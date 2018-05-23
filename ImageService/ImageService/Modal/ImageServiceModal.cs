@@ -1,6 +1,10 @@
-﻿using ImageService.Infrastructure;
+﻿using Infrastructure;
+using Infrastructure.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -344,6 +348,29 @@ namespace ImageService.Modal
                 return false;
             }
             return true;
+        }
+
+        public string GetConfig(out bool result)
+        {
+            result = true;
+            
+        //    CommandInfo info = new CommandInfo();
+         //   info.CommandID = (int)CommandEnum.GetConfigCommand;
+            JObject obj = new JObject();
+            obj["CommandID"] = (int)CommandEnum.GetConfigCommand;
+            //split all directories to handle from the appconfig
+            obj["Handlers"] = ConfigurationManager.AppSettings["Handler"];
+            //save the outputDir from appconfig
+            obj["OutputDir"] = ConfigurationManager.AppSettings["outputDir"];
+            //save the source name from appconfig
+            obj["SourceName"] = ConfigurationManager.AppSettings["SourceName"];
+            //save the log name from appconfig
+            obj["LogName"] = ConfigurationManager.AppSettings["LogName"];
+            //extract thumbnail size from appconfig
+            obj["ThumbSize"] = ConfigurationManager.AppSettings["ThumbnailSize"];
+           // info.CommandArgs = obj;
+            string output = JsonConvert.SerializeObject(obj);
+            return output;
         }
     }
 }

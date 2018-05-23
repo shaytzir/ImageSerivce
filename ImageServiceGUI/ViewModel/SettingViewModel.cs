@@ -1,10 +1,16 @@
 ﻿using ImageServiceGUI.Model;
-using Microsoft.Practices.Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using Microsoft.Practices.Prism.Commands;
+using Infrastructure.Enums;
+using Infrastructure.Event;
+using ImageServiceGUI.Communication;
+using Newtonsoft.Json;
+using Infrastructure;
+using Newtonsoft.Json.Linq;
 
 namespace ImageServiceGUI.ViewModels
 {
@@ -13,28 +19,28 @@ namespace ImageServiceGUI.ViewModels
         #region Notify Changed
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
-        protected void NotifyPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            var command = this.SubmitCommand as DelegateCommand<object>;
-            command.RaiseCanExecuteChanged();
-        }
         private SettingModel _SettingModel;
-        public ICommand SubmitCommand { get; private set; }
 
         public SettingViewModel()
         {
-            this.SubmitCommand = new DelegateCommand<object>(this.OnDelete, this.CanDelete);
             this._SettingModel = new SettingModel();
-            SettingModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
+            this._SettingModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
+            this.SubmitCommand = new DelegateCommand<object>(this.OnDelete, this.CanDelete);
         }
 
-        public SettingModel SettingModel
+        public ICommand SubmitCommand { get; private set; }
+
+
+        public void NotifyPropertyChanged(string propName)
         {
-            get { return this._SettingModel; }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+            var command = this.SubmitCommand as DelegateCommand<object>;
+            command.RaiseCanExecuteChanged();
         }
+
+        
 
         public string VM_OutputDir
         {
@@ -61,25 +67,32 @@ namespace ImageServiceGUI.ViewModels
                 return this._SettingModel.Handlers;
             }
         }
-        private string handlerToRemove;
-        public string VM_HandlersToRemove {
-            get
-            {
-                return this.handlerToRemove;
-            }
+
+        private string selectedItem;
+        public string SelectedItem
+        {
             set
             {
-                this.handlerToRemove = value;
-                this.NotifyPropertyChanged("handlerToRemove");
+                this.selectedItem = value;
+                this.NotifyPropertyChanged("SelectedItem");
             }
+            get { return this.selectedItem; }
         }
         private void OnDelete(object obj)
         {
-            this._SettingModel.RemoveHendler(this.handlerToRemove);
+            string[] handlerName = { this.selectedItem };
+            CommandRecievedEventArgs command = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, handlerName,this.selectedItem);
+            JObject json= new JObject();
+            json["CommandID"] = (int)CommandEnum.CloseCommand;
+            json["Handler"] = selectedItem;
+            string converted = JsonConvert.SerializeObject(json);
+            GuiClient.Instance.Comm.SendCommand(converted);
         }
+
+
         private bool CanDelete(object obj)
         {
-            if (this.handlerToRemove != null)
+            if (this.selectedItem != null)
             {
                 return true;
             }

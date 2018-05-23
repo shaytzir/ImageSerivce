@@ -28,12 +28,12 @@
                     <TextBlock x:Name="LogName" Grid.Row="2" Grid.Column="0"> <Run Text="Log Name: " FontStyle="Italic" /> <Run Text="{Binding VM_LogName, Mode = OneWay}" /></TextBlock>
                     <TextBlock x:Name="ThumbnailSize" Grid.Row="3" Grid.Column="0"> <Run Text="Thumbnail Size: " FontStyle="Italic" /> <Run Text="{Binding VM_ThumbnailSize, Mode = OneWay}" /></TextBlock>
                     <StackPanel Grid.Row="5">
-                        <Button Name="btnRemoveHandler" Command="{Binding SubmitCommand}" >Remove</Button>
+                        <Button Content="Remove" Grid.Row="4" Grid.ColumnSpan="2" Command="{Binding SubmitCommand}" />
                         <ListBox x:Name="LBHandlers"
                                  IsTabStop="False"
                                  ItemsSource="{Binding VM_Handlers}"
                                  Margin="5"
-                                 SelectedItem="{Binding VM_HandlersToRemove, Mode = TwoWay}" >
+                                 SelectedItem="{Binding SelectedItem, Mode = TwoWay}" >
                         </ListBox>
                     </StackPanel>
                 </StackPanel>

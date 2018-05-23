@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Infrastructure
+namespace Infrastructure.Enums
 {
     /// <summary>
     /// enum for the possible commands

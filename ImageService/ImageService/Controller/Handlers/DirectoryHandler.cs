@@ -1,9 +1,9 @@
-﻿using ImageService.Modal;
+﻿using Infrastructure.Enums;
+using Infrastructure.Event;
 using System;
 using System.IO;
 using ImageService.Logging;
 using System.Collections.Generic;
-using ImageService.Infrastructure;
 using ImageService.Commands;
 using ImageService.Logging.Modal;
 using System.Threading.Tasks;
@@ -104,7 +104,7 @@ namespace ImageService.Controller.Handlers
                 //otherwise - handle as default -adding
                 else
                 {
-                    handleAdding(e);
+                    HandleAdding(e);
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace ImageService.Controller.Handlers
         /// handling the situation where a new file was added
         /// </summary>
         /// <param name="e">info for execution</param>
-        public void handleAdding(CommandRecievedEventArgs e)
+        public void HandleAdding(CommandRecievedEventArgs e)
         {
 
             //creating a task for this specific addition

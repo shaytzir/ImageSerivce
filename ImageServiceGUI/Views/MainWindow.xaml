@@ -8,20 +8,21 @@
         mc:Ignorable="d"
         Title="MVVM"
         Height="350"
-        Width="525"
-        d:DataContext="{d:DesignInstance ImageServiceGUI:SettingViewDesignViewModel, IsDesignTimeCreatable=True}">
-    <Grid x:Name="LayoutRoot"
-          Background="{StaticResource MainBackground}">
-        <Grid MinWidth="300"
+        Width="525">
+
+    <Grid>
+        <Grid x:Name="LayoutRoot"
+          Background="{Binding VM_Connected}">
+            <Grid MinWidth="300"
               MaxWidth="800">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0"
                         Orientation="Horizontal">
-                <TextBlock HorizontalAlignment="Center"
+                    <TextBlock HorizontalAlignment="Center"
                            Width="Auto"
                            Text="Settings"
                            FontWeight="Normal"
@@ -29,16 +30,14 @@
                            FontSize="24"
                            FontFamily="Comic Sans MS"
                            VerticalAlignment="Center" />
-            </StackPanel>
-            <!-- add view here -->
-            <TabControl>
-                <TabItem Header="Settings">
-                    <views:SettingsView Grid.Row="1"
-                                     DataContext="{Binding SettingViewModel}" Height="246" VerticalAlignment="Top">
-                    </views:SettingsView>
-                </TabItem>
-                <TabItem Header="Logs" />
-            </TabControl>
+                </StackPanel>
+                <TabControl>
+            <TabItem Header="Settings">
+                <views:SettingsView/>
+            </TabItem>
+            <TabItem Header="Logs" />
+        </TabControl>
+    </Grid>
         </Grid>
     </Grid>
 </Window>

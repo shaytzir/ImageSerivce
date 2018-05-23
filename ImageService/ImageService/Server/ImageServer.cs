@@ -1,10 +1,6 @@
-﻿using ImageService.Controller;
-using ImageService;
-using ImageService.Controller.Handlers;
-using ImageService.Server;
-using ImageService.Infrastructure;
-using ImageService.Logging;
-using ImageService.Modal;
+﻿using Infrastructure;
+using Infrastructure.Enums;
+using Infrastructure.Event;
 using System;
 using System.Configuration;
 using System.Text;
@@ -14,6 +10,13 @@ using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Windows.Input;
+using Communication;
+using System.Threading.Tasks;
+using ImageService.Controller.Handlers;
+using ImageService.Controller;
+using ImageService.Logging;
+using ImageService.Modal;
+using Newtonsoft.Json;
 
 namespace ImageService.Server
 {
@@ -25,6 +28,7 @@ namespace ImageService.Server
         #region Members
         private IImageController m_controller;
         private ILoggingService m_logging;
+        private TcpTimeServer tcpServer;
         private string[] seperatedPaths;
         private byte[] toClient = { };
         private Settings settingsObj;
@@ -67,14 +71,21 @@ namespace ImageService.Server
                 str = enc.GetString(toClient);
                 toClient = Encoding.ASCII.GetBytes(str + path + ";");
             }
-            this.settingsObj = new Settings();
-            settingsObj.OutputDir = outPutDir;
-            settingsObj.SourceName = sourceName;
-            settingsObj.LogName = logNmae;
-            settingsObj.ThumbSize = thumbnailSize;
-            settingsObj.Handlers = enc.GetString(toClient);
-            Thread thread = new Thread(new ThreadStart(CreateTcpServer));
-            thread.Start();
+
+            ClientHandler.DebugClientHandler += this.LogTheFuckingMessageDebug;
+           // ClientHandler.GotCommandFromGui += this.GetCommandFromService;
+            new Task(() =>
+            {
+                this.tcpServer = new TcpTimeServer();
+                this.tcpServer.NewClientConnected += this.SendSettingsAndLog;
+                this.tcpServer.PassInfoFromClientHandlerToServer += this.GetCommandFromService;
+                this.tcpServer.Start();
+            }).Start();
+        }
+
+        private void LogTheFuckingMessageDebug(object sender, string e)
+        {
+            this.m_logging.Log(e, Logging.Modal.MessageTypeEnum.INFO);
         }
 
         /// <summary>
@@ -92,7 +103,7 @@ namespace ImageService.Server
         }
 
         /// <summary>
-        /// closing the server function
+        /// letting the server know a handler was closed
         /// </summary>
         /// <param name="sender">who invoked the event called this func</param>
         /// <param name="args">info</param>
@@ -119,56 +130,29 @@ namespace ImageService.Server
                 this.CommandRecieved?.Invoke(this, closeCommandArgs);
             }
         }
-        private void CreateTcpServer()
+
+        private void GetCommandFromService(object sender, string jsonCommand)
         {
-            TcpTimeServer tcpServer = new TcpTimeServer();
-            tcpServer.Start(this.m_logging);
-            tcpServer.Send(Encoding.ASCII.GetBytes(this.settingsObj.ToJSON()), this.m_logging);
-            //string command = tcpServer.GetCommand();
-            //m_logging.Log(command, Logging.Modal.MessageTypeEnum.INFO);
-        }
-        internal class Settings
-        {
-            private string _OutputDir;
-            public string OutputDir
+            JObject json = JsonConvert.DeserializeObject<JObject>(jsonCommand);
+           // string commandID = (string)json["CommandID"];
+          //  string closeCommand = CommandEnum.CloseCommand.ToString();
+           // if (commandID.Equals(closeCommand))
+           if ((int)json["CommandID"] == (int)CommandEnum.CloseCommand)
             {
-                get { return _OutputDir; }
-                set { _OutputDir = value; }
-            }
-            private string _SourceName;
-            public string SourceName
-            {
-                get { return _SourceName; }
-                set { _SourceName = value; }
-            }
-            private string _LogName;
-            public string LogName
-            {
-                get { return _LogName; }
-                set { _LogName = value; }
-            }
-            private string _ThumbSize;
-            public string ThumbSize
-            {
-                get { return _ThumbSize; }
-                set { _ThumbSize = value; }
-            }
-            private string _Handlers;
-            public string Handlers
-            {
-                get { return _Handlers; }
-                set { _Handlers = value; }
-            }
-            public string ToJSON()
-            {
-                JObject settingObj = new JObject();
-                settingObj["OutputDir"] = OutputDir;
-                settingObj["SourceName"] = SourceName;
-                settingObj["LogName"] = LogName;
-                settingObj["ThumbSize"] = ThumbSize;
-                settingObj["Handlers"] = Handlers;
-                return settingObj.ToString();
+                CommandRecievedEventArgs args = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, (string)json["Handler"]);
+                this.CommandRecieved?.Invoke(this, args);
+                tcpServer.SendToAllClients(JsonConvert.SerializeObject(json));
             }
         }
+
+        private void SendSettingsAndLog(object sender, IClientHandler client)
+        {
+            bool success;
+            string setting = m_controller.ExecuteCommand((int)CommandEnum.GetConfigCommand, null, out success);
+           // IClientHandler handler = (IClientHandler)sender;
+            client.SendCommand(setting);
+        }
+
+        
     }
 }
