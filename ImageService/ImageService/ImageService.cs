@@ -115,9 +115,5 @@ namespace ImageService
         {
             eventLog1.WriteEntry(e.Message);
         }
-
-        internal class Settings
-        {
-        }
     }
 }

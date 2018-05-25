@@ -33,7 +33,7 @@
                                  IsTabStop="False"
                                  ItemsSource="{Binding VM_Handlers}"
                                  Margin="5"
-                                 SelectedItem="{Binding SelectedItem, Mode = TwoWay}" >
+                                 SelectedItem="{Binding SelectedItem, Mode = TwoWay}">
                         </ListBox>
                     </StackPanel>
                 </StackPanel>

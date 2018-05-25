@@ -11,6 +11,8 @@ using ImageServiceGUI.Communication;
 using Newtonsoft.Json;
 using Infrastructure;
 using Newtonsoft.Json.Linq;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace ImageServiceGUI.ViewModels
 {
@@ -31,7 +33,9 @@ namespace ImageServiceGUI.ViewModels
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
             this.RemoveHandlerCommand = new DelegateCommand<object>(this.OnDelete, this.CanDelete);
+            
         }
+
 
         /// <summary>
         /// Gets the submit command.
@@ -158,5 +162,6 @@ namespace ImageServiceGUI.ViewModels
             }
             return false;
         }
+
     }
 }

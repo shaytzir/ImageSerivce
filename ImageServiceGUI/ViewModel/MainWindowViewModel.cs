@@ -34,7 +34,7 @@ namespace ImageServiceGUI.ViewModels
             {
                 if (this.model.Connected == true)
                 {
-                    return "RosyBrown";
+                    return "DarkOliveGreen";
                 } else
                 {
                     return "Gray";
