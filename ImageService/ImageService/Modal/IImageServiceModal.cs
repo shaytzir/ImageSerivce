@@ -19,5 +19,6 @@ namespace ImageService.Modal
         string AddFile(string path, out bool result);
         string GetConfig(out bool result);
         string RemoveHandlerFromConfig(string handler, out bool result);
+        string GetLog(out bool result);
     }
 }

@@ -53,7 +53,7 @@ namespace ImageService.Server
             //extract thumbnail size from appconfig
             string thumbnailSize = ConfigurationManager.AppSettings["ThumbnailSize"];
             //create a new modal - send as inputs the outputDir path and desiered thumbnail size
-            IImageServiceModal imageModal = new ImageServiceModal(outPutDir, Int32.Parse(thumbnailSize));
+            IImageServiceModal imageModal = new ImageServiceModal(outPutDir, Int32.Parse(thumbnailSize), m_logging);
             this.m_controller = new ImageController(imageModal);
             //create a direcotry handler for each path in the handler section extracted from the appconfig
             foreach (string path in seperatedPaths)
@@ -150,6 +150,8 @@ namespace ImageService.Server
             //genertate string (serialize to json of all settings from the appconfig)
             string setting = m_controller.ExecuteCommand((int)CommandEnum.GetConfigCommand, null, out success);
             client.SendCommand(setting);
+            string log = m_controller.ExecuteCommand((int)CommandEnum.LogCommand, null, out success);
+            client.SendCommand(log);
         }
 
 

@@ -34,7 +34,9 @@
                 <TabItem Header="Settings">
                     <views:SettingsView/>
                 </TabItem>
-                <TabItem Header="Logs" />
+                <TabItem Header="Logs">
+                    <views:LogsView/>
+                </TabItem>
             </TabControl>
         </Grid>
     </Grid>

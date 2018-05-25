@@ -17,7 +17,21 @@ namespace ImageService.Logging
         /// event when a message is recieved
         /// </summary>
         public event EventHandler<MessageRecievedEventArgs> MessageRecieved;
-
+        List<MessageRecievedEventArgs> _LogList;
+        public List<MessageRecievedEventArgs> LogList
+        {
+            get
+            {
+                return this._LogList;
+            }
+            set
+            {
+                this._LogList = value;
+            }
+        }
+        public LoggingService() {
+            this._LogList = new List<MessageRecievedEventArgs>();
+        }
         /// <summary>
         /// the logging service invokes it's event for all subscribers to operate
         /// </summary>
@@ -31,6 +45,7 @@ namespace ImageService.Logging
                 Status = type,
                 Message = message
             };
+            this._LogList.Add(messageRecievedEventArgs);
             //notify subscribers of the new message recieved
             MessageRecieved?.Invoke(this, messageRecievedEventArgs);
         }

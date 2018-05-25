@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using ImageService.Logging;
+using Infrastructure;
 using Infrastructure.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -60,16 +61,17 @@ namespace ImageService.Modal
                 this.m_thumbnailSize = value;
             }
         }
-
+        ILoggingService m_logger;
         /// <summary>
         /// constructor
         /// </summary>
         /// <param name="m_OutputFolder">the path of the output folder</param>
         /// <param name="m_thumbnailSize">the size of the created thumbnail</param>
-        public ImageServiceModal(string m_OutputFolder, int m_thumbnailSize)
+        public ImageServiceModal(string m_OutputFolder, int m_thumbnailSize, ILoggingService logger)
         {
             this.m_OutputFolder = m_OutputFolder;
             this.m_thumbnailSize = m_thumbnailSize;
+            this.m_logger = logger;
         }
 
         /// <summary>
@@ -372,11 +374,22 @@ namespace ImageService.Modal
             string output = JsonConvert.SerializeObject(obj);
             return output;
         }
-
-        public string RemoveHandlerFromConfig(string handler, out bool result)
+        public string GetLog(out bool result)
         {
             result = true;
-            Configuration m_Configuration = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            //    CommandInfo info = new CommandInfo();
+            //   info.CommandID = (int)CommandEnum.GetConfigCommand;
+            JObject obj = new JObject();
+            obj["CommandID"] = (int)CommandEnum.LogCommand;
+            obj["LogList"] = (JArray)JToken.FromObject(this.m_logger.LogList);
+            string output = JsonConvert.SerializeObject(obj);
+            return output;
+        }
+            public string RemoveHandlerFromConfig(string handler, out bool result)
+        {
+            result = true;
+            Configuration m_Configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string oldHandlersConnected = ConfigurationManager.AppSettings["Handler"];
             string[] oldHandlers = oldHandlersConnected.Split(';');
            m_Configuration.AppSettings.Settings.Remove("Handler");

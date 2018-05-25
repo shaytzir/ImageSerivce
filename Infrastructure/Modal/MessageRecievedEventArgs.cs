@@ -15,6 +15,7 @@ namespace ImageService.Logging.Modal
         /// setter/getter for the status of the message - info/fail/warning
         /// </summary>
         public MessageTypeEnum Status { get; set; }
+        public int Type { get; set; }
 
         /// <summary>
         /// setter/getter for the message infos

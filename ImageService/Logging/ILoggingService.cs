@@ -17,6 +17,11 @@ namespace ImageService.Logging
         /// an event saying a new message was recieved.
         /// </summary>
         event EventHandler<MessageRecievedEventArgs> MessageRecieved;
+        List<MessageRecievedEventArgs> LogList
+        {
+            set;
+            get;
+        }
 
         /// <summary>
         /// Logging the Message. notifying all subscribers.

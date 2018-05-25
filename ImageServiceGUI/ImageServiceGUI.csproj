@@ -64,6 +64,7 @@
     </ApplicationDefinition>
     <Compile Include="Communication\GuiClient.cs" />
     <Compile Include="Model\IMainWindowModel.cs" />
+    <Compile Include="Model\LogModel.cs" />
     <Compile Include="Model\MainWindowModel.cs" />
     <Compile Include="Model\SettingModel.cs" />
     <Compile Include="ViewModel\LogViewModel.cs" />

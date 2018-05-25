@@ -26,6 +26,7 @@ namespace ImageService.Controller
             commands.Add((int)CommandEnum.NewFileCommand, new NewFileCommand(m_modal));
             commands.Add((int)CommandEnum.GetConfigCommand, new GetConfigCommand(m_modal));
             commands.Add((int)CommandEnum.RemoveHandlerFromConfig, new RemoveHandlerFromConfig(m_modal));
+            commands.Add((int)CommandEnum.LogCommand, new LogCommand(m_modal));
         }
 
         /// <summary>

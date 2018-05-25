@@ -7,6 +7,42 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="LogsView">
+    <FlowDocumentReader>
+        <FlowDocument>
+            <Table CellSpacing="10">
+                <Table.Columns>
+                    <TableColumn/>
+                    <TableColumn/>
+                    <TableColumn/>
+                    <TableColumn/>
+                </Table.Columns>
 
-  
+                <TableRowGroup>
+                    <TableRow Background="SkyBlue">
+                        <TableCell ColumnSpan="2" TextAlignment="Center">
+                            <Paragraph FontSize="24pt" FontWeight="Bold">Logs</Paragraph>
+                        </TableCell>
+                    </TableRow>
+                    <TableRow Background="LightGoldenrodYellow">
+                        <TableCell>
+                            <Paragraph FontSize="14pt" FontWeight="Bold">Type</Paragraph>
+                        </TableCell>
+                        <TableCell>
+                            <Paragraph FontSize="14pt" FontWeight="Bold">Message</Paragraph>
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>
+                            <Paragraph>
+                                <ListView ItemsSource="{Binding VM_Types}" />
+                            </Paragraph>
+                        </TableCell>
+                        <TableCell>
+                            <Paragraph>778,330,000 km</Paragraph>
+                        </TableCell>
+                    </TableRow>
+                </TableRowGroup>
+            </Table>
+        </FlowDocument>
+    </FlowDocumentReader>
 </Page>

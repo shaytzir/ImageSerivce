@@ -115,5 +115,10 @@ namespace ImageService
         {
             eventLog1.WriteEntry(e.Message);
         }
+
+        private void eventLog1_EntryWritten(object sender, EntryWrittenEventArgs e)
+        {
+
+        }
     }
 }
