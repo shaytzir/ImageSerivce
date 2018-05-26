@@ -10,7 +10,7 @@
           AutoGenerateColumns = "False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header = "Type" Binding="{Binding Path=Status}" />
-                <DataGridTextColumn Header = "Message" Binding="{Binding Path = Message}" />
+                <DataGridTextColumn Header = "Message" Binding="{Binding Path = Message}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
