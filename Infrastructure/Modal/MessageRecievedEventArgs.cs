@@ -11,7 +11,7 @@ namespace ImageService.Logging.Modal
     /// <summary>
     /// defines a message
     /// </summary>
-    public class MessageRecievedEventArgs : EventArgs, INotifyPropertyChanged
+    public class MessageRecievedEventArgs : EventArgs
     {
         public MessageTypeEnum _Status;
         /// <summary>
@@ -26,10 +26,10 @@ namespace ImageService.Logging.Modal
             set
             {
                 this._Status = value;
-                RaiseProperChanged();
+                //RaiseProperChanged();
             }
         }
-        public int Type { get; set; }
+      //  public int Type { get; set; }
 
         public string _Message;
         /// <summary>
@@ -44,10 +44,10 @@ namespace ImageService.Logging.Modal
             set
             {
                 this._Message = value;
-                RaiseProperChanged();
+               // RaiseProperChanged();
             }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
+   /*     public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaiseProperChanged([CallerMemberName] string caller = "")
         {
@@ -55,6 +55,6 @@ namespace ImageService.Logging.Modal
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(caller));
             }
-        }
+        }*/
     }
 }

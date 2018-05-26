@@ -80,7 +80,7 @@ namespace ImageServiceGUI.Model
                 for (int i = 0; i < LogList.Count; i++)
                 {
                     //Logs.Add(new MessageRecievedEventArgs() { Type = (int)LogList[i]["Status"], Message = (string)LogList[i]["Message"] });
-                    Logs.Insert(0, new MessageRecievedEventArgs() { Type = (int)LogList[i].Status, Message = (string)LogList[i].Message });
+                    Logs.Insert(0, new MessageRecievedEventArgs() { Status = LogList[i].Status, Message = (string)LogList[i].Message });
                     }
                 }));
             }
