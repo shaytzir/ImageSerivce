@@ -78,7 +78,9 @@ namespace ImageService
         /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
-            eventLog1.WriteEntry("In OnStart");
+            this.loggerService = new LoggingService();
+            this.loggerService.MessageRecieved += WriteLogMessage;
+            this.loggerService.Log("On start", MessageTypeEnum.INFO);
 
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
@@ -90,8 +92,6 @@ namespace ImageService
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-            this.loggerService = new LoggingService();
-            this.loggerService.MessageRecieved += WriteLogMessage;
             //create a server for this service
             ImageServer server = new ImageServer(loggerService);
         }
@@ -102,7 +102,7 @@ namespace ImageService
         /// </summary>
         protected override void OnStop()
         {
-            eventLog1.WriteEntry("In onStop.");
+            this.loggerService.Log("In onSyop.", MessageTypeEnum.INFO);
             loggerService.MessageRecieved -= WriteLogMessage;
         }
 
