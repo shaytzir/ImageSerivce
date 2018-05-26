@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageService.Logging
@@ -18,6 +19,8 @@ namespace ImageService.Logging
         /// </summary>
         public event EventHandler<MessageRecievedEventArgs> MessageRecieved;
         List<MessageRecievedEventArgs> _LogList;
+        private static Mutex m_mutex = new Mutex();
+
         public List<MessageRecievedEventArgs> LogList
         {
             get
@@ -45,7 +48,9 @@ namespace ImageService.Logging
                 Status = type,
                 Message = message
             };
+            m_mutex.WaitOne();
             this._LogList.Add(messageRecievedEventArgs);
+            m_mutex.ReleaseMutex();
             //notify subscribers of the new message recieved
             MessageRecieved?.Invoke(this, messageRecievedEventArgs);
         }

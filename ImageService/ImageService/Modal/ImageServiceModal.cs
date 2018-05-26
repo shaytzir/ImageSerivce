@@ -395,7 +395,6 @@ namespace ImageService.Modal
             string[] oldHandlers = oldHandlersConnected.Split(';');
            m_Configuration.AppSettings.Settings.Remove("Handler");
             StringBuilder newHandlers = new StringBuilder();
-            newHandlers.Append("");
             foreach (string h in oldHandlers)
             {
                 if (!h.Equals(handler))
@@ -403,6 +402,10 @@ namespace ImageService.Modal
                     newHandlers.Append(h);
                     newHandlers.Append(';');
                 }
+            }
+            if (newHandlers.Length > 1)
+            {
+                newHandlers.Remove(newHandlers.Length - 1, 1);
             }
             string newHandlesString = newHandlers.ToString();
             ConfigurationManager.AppSettings.Set("Handler", newHandlesString);
