@@ -19,14 +19,14 @@ namespace ImageServiceGUI.Views
     /// <summary>
     /// Interaction logic for LogsView.xaml
     /// </summary>
-    public partial class LogsView : Page
+    public partial class LogsView : UserControl
     {
         public LogsView()
         {
             InitializeComponent();
             LogViewModel logVM = new LogViewModel();
             this.DataContext = logVM;
-            dataGrid.ItemsSource = logVM.VM_Logs;
+            //dataGrid.ItemsSource = logVM.VM_Logs;
         }
     }
 }

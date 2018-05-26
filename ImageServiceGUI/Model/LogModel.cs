@@ -17,13 +17,13 @@ namespace ImageServiceGUI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private GuiClient guiClient;
+      //  private ObservableCollection<MessageRecievedEventArgs> _Logs;
         private ObservableCollection<MessageRecievedEventArgs> _Logs;
+
+
         public ObservableCollection<MessageRecievedEventArgs> Logs
         {
-            get
-            {
-                return this._Logs;
-            }
+            get { return this._Logs; }
             set
             {
                 this._Logs = value;
@@ -37,6 +37,8 @@ namespace ImageServiceGUI.Model
         /// The name of the log.
         /// </value>
         public JArray LogList { get; set; }
+
+        public ObservableCollection<MessageRecievedEventArgs> mylist;
         public LogModel()
         {
             this.Logs = new ObservableCollection<MessageRecievedEventArgs>();
@@ -56,7 +58,7 @@ namespace ImageServiceGUI.Model
             //if it send the configuration info
             if (commandID == (int)CommandEnum.LogCommand)
             {
-                UpdateLog(commandFromSrv);
+                UpdateLog((string)json["LogList"]);
                 //if it closed a directory
             }
         }
@@ -66,18 +68,19 @@ namespace ImageServiceGUI.Model
         /// <param name="CommandFromSrv">The MSG.</param>
         private void UpdateLog(string CommandFromSrv)
         {
-            JObject json = JsonConvert.DeserializeObject<JObject>(CommandFromSrv);
+            List<MessageRecievedEventArgs> LogList = JsonConvert.DeserializeObject<List<MessageRecievedEventArgs>>(CommandFromSrv);
             try
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    //List<MessageRecievedEventArgs> LogList = (List<MessageRecievedEventArgs>)JsonConvert.DeserializeObject((JArray)json["LogList"]);
-                    this.LogList = (JArray)JToken.FromObject(json["LogList"]);
+                   // JsonConvert.DeserializeObject<List<MessageRecievedEventArgs>>(json["Loglist"]);
+                   // this.LogList = (JArray)JToken.FromObject(json["LogList"]);
                     ///try to make tow different list of type and message
-                    ///for now, xaml gets Logs from the VM
-                    for (int i = 0; i < LogList.Count; i++)
-                    {
-                        Logs.Add(new MessageRecievedEventArgs() { Type = (int)LogList[i]["Status"], Message = (string)LogList[i]["Message"] });
+                    //////for now, xaml gets Logs from the VM
+                for (int i = 0; i < LogList.Count; i++)
+                {
+                    //Logs.Add(new MessageRecievedEventArgs() { Type = (int)LogList[i]["Status"], Message = (string)LogList[i]["Message"] });
+                    Logs.Insert(0, new MessageRecievedEventArgs() { Type = (int)LogList[i].Status, Message = (string)LogList[i].Message });
                     }
                 }));
             }

@@ -382,7 +382,8 @@ namespace ImageService.Modal
             //   info.CommandID = (int)CommandEnum.GetConfigCommand;
             JObject obj = new JObject();
             obj["CommandID"] = (int)CommandEnum.LogCommand;
-            obj["LogList"] = (JArray)JToken.FromObject(this.m_logger.LogList);
+            obj["LogList"] = JsonConvert.SerializeObject(this.m_logger.LogList);
+            //obj["LogList"] = (JArray)JToken.FromObject(this.m_logger.LogList);
             string output = JsonConvert.SerializeObject(obj);
             return output;
         }
