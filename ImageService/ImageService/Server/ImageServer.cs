@@ -11,6 +11,7 @@ using ImageService.Controller;
 using ImageService.Logging;
 using ImageService.Modal;
 using Newtonsoft.Json;
+using ImageService.Logging.Modal;
 
 namespace ImageService.Server
 {
@@ -41,6 +42,7 @@ namespace ImageService.Server
         {
             System.Text.Encoding enc = System.Text.Encoding.ASCII;
             this.m_logging = logger;
+            this.m_logging.MessageRecieved += WriteLogMessage;
             //split all directories to handle from the appconfig
             string paths = ConfigurationManager.AppSettings["Handler"];
             this.seperatedPaths = paths.Split(';');
@@ -153,7 +155,19 @@ namespace ImageService.Server
             string log = m_controller.ExecuteCommand((int)CommandEnum.LogCommand, null, out success);
             client.SendCommand(log);
         }
+        private void WriteLogMessage(Object sender, MessageRecievedEventArgs e)
+        {
+            bool success;
+            string log = m_controller.ExecuteCommand((int)CommandEnum.LogCommand, null, out success);
+            //JObject json = JsonConvert.DeserializeObject<JObject>(log);
+            try
+            {
+                tcpServer.SendToAllClients(log);
+            } catch (Exception eeee)
+            {
 
+            }
+        }
 
     }
 }

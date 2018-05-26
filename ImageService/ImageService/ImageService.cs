@@ -102,7 +102,7 @@ namespace ImageService
         /// </summary>
         protected override void OnStop()
         {
-            this.loggerService.Log("In onSyop.", MessageTypeEnum.INFO);
+            this.loggerService.Log("In onStop.", MessageTypeEnum.INFO);
             loggerService.MessageRecieved -= WriteLogMessage;
         }
 

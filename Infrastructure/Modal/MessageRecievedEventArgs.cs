@@ -29,7 +29,6 @@ namespace ImageService.Logging.Modal
                 RaiseProperChanged();
             }
         }
-        public int Type { get; set; }
 
         public string _Message;
         /// <summary>

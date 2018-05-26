@@ -38,7 +38,6 @@ namespace ImageServiceGUI.Model
         /// </value>
         public JArray LogList { get; set; }
 
-        public ObservableCollection<MessageRecievedEventArgs> mylist;
         public LogModel()
         {
             this.Logs = new ObservableCollection<MessageRecievedEventArgs>();
@@ -73,14 +72,12 @@ namespace ImageServiceGUI.Model
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                   // JsonConvert.DeserializeObject<List<MessageRecievedEventArgs>>(json["Loglist"]);
-                   // this.LogList = (JArray)JToken.FromObject(json["LogList"]);
-                    ///try to make tow different list of type and message
-                    //////for now, xaml gets Logs from the VM
-                for (int i = 0; i < LogList.Count; i++)
-                {
-                    //Logs.Add(new MessageRecievedEventArgs() { Type = (int)LogList[i]["Status"], Message = (string)LogList[i]["Message"] });
-                    Logs.Insert(0, new MessageRecievedEventArgs() { Type = (int)LogList[i].Status, Message = (string)LogList[i].Message });
+                    int numOfNewLogs = LogList.Count - Logs.Count - 1;
+                    int logsCount = LogList.Count - 1;
+                    for (int i = numOfNewLogs; i >= 0; i--)
+                    {
+                        Logs.Insert(0, new MessageRecievedEventArgs() { Status = LogList[logsCount].Status, Message = (string)LogList[logsCount].Message });
+                        logsCount--;
                     }
                 }));
             }
