@@ -1,4 +1,5 @@
-﻿using ImageServiceGUI.Model;
+﻿using ImageService.Logging.Modal;
+using ImageServiceGUI.Model;
 using Infrastructure.Enums;
 using Newtonsoft.Json.Linq;
 using System;
@@ -34,8 +35,6 @@ namespace ImageServiceGUI.ViewModel
         public void NotifyPropertyChanged(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-            /*var command = this.RemoveHandlerCommand as DelegateCommand<object>;
-            command.RaiseCanExecuteChanged();*/
         }
         /// <summary>
         /// Gets the vm output dir.
@@ -43,9 +42,9 @@ namespace ImageServiceGUI.ViewModel
         /// <value>
         /// The vm output dir.
         /// </value>
-        public JArray VM_Types
+        public ObservableCollection<MessageRecievedEventArgs> VM_Logs
         {
-            get { return this._LogModel.LogList; }
+            get { return this._LogModel.Logs; }
         }
     }
 }

@@ -17,30 +17,29 @@ namespace ImageServiceGUI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private GuiClient guiClient;
-        public ObservableCollection<MessageRecievedEventArgs> Logs { get; set; }
-        private JArray m_LogList;
+        private ObservableCollection<MessageRecievedEventArgs> _Logs;
+        public ObservableCollection<MessageRecievedEventArgs> Logs
+        {
+            get
+            {
+                return this._Logs;
+            }
+            set
+            {
+                this._Logs = value;
+                this.NotifyPropertyChanged("Logs");
+            }
+        }
         /// <summary>
         /// Gets or sets the name of the log.
         /// </summary>
         /// <value>
         /// The name of the log.
         /// </value>
-        public JArray LogList
-        {
-            get
-            {
-                return m_LogList;
-            }
-            set
-            {
-                m_LogList = value;
-                this.NotifyPropertyChanged("LogName");
-            }
-        }
+        public JArray LogList { get; set; }
         public LogModel()
         {
             this.Logs = new ObservableCollection<MessageRecievedEventArgs>();
-            this.m_TypeList = new ObservableCollection<CommandEnum>();
             this.guiClient = GuiClient.Instance;
             //when the client recieves informtaion from the server call the handle function
             guiClient.Comm.InfoFromServer += HandleServerCommands;
@@ -75,11 +74,10 @@ namespace ImageServiceGUI.Model
                     //List<MessageRecievedEventArgs> LogList = (List<MessageRecievedEventArgs>)JsonConvert.DeserializeObject((JArray)json["LogList"]);
                     this.LogList = (JArray)JToken.FromObject(json["LogList"]);
                     ///try to make tow different list of type and message
-                    ///for now, xaml gets LogList from the VM
+                    ///for now, xaml gets Logs from the VM
                     for (int i = 0; i < LogList.Count; i++)
                     {
                         Logs.Add(new MessageRecievedEventArgs() { Type = (int)LogList[i]["Status"], Message = (string)LogList[i]["Message"] });
-                        m_TypeList.Add((CommandEnum)((int)LogList[i]["Status"]));
                     }
                 }));
             }
@@ -89,40 +87,12 @@ namespace ImageServiceGUI.Model
             }
         }
         /// <summary>
-        /// Called when  a property changed.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        protected void OnPropertyChanged(string name)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
-        }
-        /// <summary>
         /// Notifies the property changed.
         /// </summary>
         /// <param name="propName">Name of the property.</param>
         public void NotifyPropertyChanged(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
-        private ObservableCollection<CommandEnum> m_TypeList;
-        /// <summary>
-        /// Gets or sets the output dir.
-        /// </summary>
-        /// <value>
-        /// The output dir.
-        /// </value>
-        public ObservableCollection<CommandEnum> TypeList
-        {
-            get
-            {
-                return m_TypeList;
-            }
-            set
-            {
-                m_TypeList = value;
-                this.NotifyPropertyChanged("TypeList");
-            }
         }
     }
 }
