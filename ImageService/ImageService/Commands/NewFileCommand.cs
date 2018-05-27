@@ -13,7 +13,6 @@ namespace ImageService.Commands
     public class NewFileCommand : ICommand
     {
         private IImageServiceModal m_modal;
-
         /// <summary>
         /// a constuctor
         /// </summary>

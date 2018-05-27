@@ -1,14 +1,8 @@
 ﻿using ImageService.Logging.Modal;
 using ImageServiceGUI.Model;
-using Infrastructure.Enums;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageServiceGUI.ViewModel
 {
@@ -17,7 +11,9 @@ namespace ImageServiceGUI.ViewModel
         #region Notify Changed
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
+
         private LogModel _LogModel;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -28,6 +24,7 @@ namespace ImageServiceGUI.ViewModel
                 NotifyPropertyChanged("VM_" + e.PropertyName);
             };
         }
+
         /// <summary>
         /// Notifies the property changed.
         /// </summary>
@@ -36,6 +33,7 @@ namespace ImageServiceGUI.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
+
         /// <summary>
         /// Gets the vm output dir.
         /// </summary>

@@ -4,7 +4,6 @@ using System;
 using System.IO;
 using ImageService.Logging;
 using System.Collections.Generic;
-using ImageService.Commands;
 using ImageService.Logging.Modal;
 using System.Threading.Tasks;
 
@@ -83,7 +82,6 @@ namespace ImageService.Controller.Handlers
             this.OnCommandRecieved(this, newFileCreated);
         }
 
-
         /// <summary>
         /// The Event that will be activated upon new Command
         /// </summary>
@@ -109,14 +107,12 @@ namespace ImageService.Controller.Handlers
             }
         }
 
-
         /// <summary>
         /// handling the situation where a new file was added
         /// </summary>
         /// <param name="e">info for execution</param>
         public void HandleAdding(CommandRecievedEventArgs e)
         {
-
             //creating a task for this specific addition
             Task newTask = new Task(() =>
             {
@@ -134,7 +130,6 @@ namespace ImageService.Controller.Handlers
             //running the task
             newTask.Start();
         }
-
 
         /// <summary>
         /// handling the situation of closing the directory

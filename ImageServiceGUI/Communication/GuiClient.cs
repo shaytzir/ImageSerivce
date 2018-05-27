@@ -30,7 +30,6 @@ namespace ImageServiceGUI.Communication
             }
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GuiClient"/> class.
         /// </summary>
@@ -41,7 +40,6 @@ namespace ImageServiceGUI.Communication
             this.Comm = new TcpTimeClient();
             Comm.Start();
             Connected = Comm.Connected;
-
         }
 
         /// <summary>

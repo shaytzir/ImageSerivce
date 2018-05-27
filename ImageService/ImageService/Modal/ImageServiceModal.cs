@@ -1,10 +1,8 @@
 ﻿using ImageService.Logging;
-using Infrastructure;
 using Infrastructure.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -12,9 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-
 
 namespace ImageService.Modal
 {
@@ -61,7 +56,9 @@ namespace ImageService.Modal
                 this.m_thumbnailSize = value;
             }
         }
+
         ILoggingService m_logger;
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -146,11 +143,9 @@ namespace ImageService.Modal
         private void SaveThumbnailInOutputDir(string path, string destThumbPath)
         {
             string ext = Path.GetExtension(path);
-
             int i = 1;
             //combines the path to also have the file name
             string destPathFileName = Path.Combine(destThumbPath, Path.GetFileName(path));
-
             string newDestName = destPathFileName;
             //if we're trying to save a thumbnail with a name that already exists, add to 
             //it's name 1/2/3... according to the copy number
@@ -161,7 +156,6 @@ namespace ImageService.Modal
                 newDestName = Path.Combine(destThumbPath, name);
                 i++;
             }
-
             //save the thumbnail in it's directory
             using (Image pic = Image.FromFile(path))
             using (Image thumbnail = pic.GetThumbnailImage
@@ -170,9 +164,7 @@ namespace ImageService.Modal
                 thumbnail.Save(newDestName);
                 thumbnail.Dispose();
             }
-
         }
-
 
         /// <summary>
         /// extract the date of the in which the file was created
@@ -197,7 +189,6 @@ namespace ImageService.Modal
                 {
                     creation = File.GetCreationTime(path);
                 }
-
             }
             return creation;
         }
@@ -218,7 +209,6 @@ namespace ImageService.Modal
             {
                 throw new Exception("wasn't able to find or create " + m_OutputFolder + " ");
             }
-
         }
 
         /// <summary>
@@ -235,7 +225,6 @@ namespace ImageService.Modal
             {
                 throw new Exception("wasn't able to create " + thumbPath + " ");
             }
-
         }
 
         /// <summary>
@@ -311,7 +300,6 @@ namespace ImageService.Modal
             string ext = Path.GetExtension(sourcePath);
             string fileName = Path.GetFileName(sourcePath);
             string destFilePath = Path.Combine(destPath, fileName);
-
             string newDestName = destFilePath;
             //as long as the direcory contains a file w the same name
             //add 1/2/3... according to the copy number
@@ -332,7 +320,6 @@ namespace ImageService.Modal
             }
         }
 
-
         /// <summary>
         /// check if the outputdir already exsists
         /// </summary>
@@ -341,7 +328,6 @@ namespace ImageService.Modal
         /// <returns>true if exsitis - otherwise false</returns>
         public bool CheckIfDestExists(string sourcePath, string destPath)
         {
-
             string fileName = Path.GetFileName(sourcePath);
             string destFilePath = Path.Combine(destPath, fileName);
             //if the file wasnt moved to it's destenation folders before
@@ -352,12 +338,14 @@ namespace ImageService.Modal
             return true;
         }
 
+        /// <summary>
+        /// extract settings from appconfig and save them in JObject.
+        /// </summary>
+        /// <param name="result">change to true - success of adding/error message</param>
+        /// <returns>the JObject serialized</returns>
         public string GetConfig(out bool result)
         {
             result = true;
-            
-        //    CommandInfo info = new CommandInfo();
-         //   info.CommandID = (int)CommandEnum.GetConfigCommand;
             JObject obj = new JObject();
             obj["CommandID"] = (int)CommandEnum.GetConfigCommand;
             //split all directories to handle from the appconfig
@@ -370,30 +358,40 @@ namespace ImageService.Modal
             obj["LogName"] = ConfigurationManager.AppSettings["LogName"];
             //extract thumbnail size from appconfig
             obj["ThumbSize"] = ConfigurationManager.AppSettings["ThumbnailSize"];
-           // info.CommandArgs = obj;
             string output = JsonConvert.SerializeObject(obj);
             return output;
         }
+
+        /// <summary>
+        /// serialed the log command with the ID command and the log list.
+        /// </summary>
+        /// <param name="result">change to true - success of adding/error message</param>
+        /// <returns>log command serialesd</returns>
         public string GetLog(out bool result)
         {
             result = true;
-
-            //    CommandInfo info = new CommandInfo();
-            //   info.CommandID = (int)CommandEnum.GetConfigCommand;
             JObject obj = new JObject();
             obj["CommandID"] = (int)CommandEnum.LogCommand;
+            //save the log list from the logger
             obj["LogList"] = JsonConvert.SerializeObject(this.m_logger.LogList);
-            //obj["LogList"] = (JArray)JToken.FromObject(this.m_logger.LogList);
             string output = JsonConvert.SerializeObject(obj);
             return output;
         }
-            public string RemoveHandlerFromConfig(string handler, out bool result)
+
+        /// <summary>
+        /// remove handler from the list of handlers and send a message about it to the log.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="result">change to true - success of adding/error message</param>
+        /// <returns>the message of handler removed</returns>
+        public string RemoveHandlerFromConfig(string handler, out bool result)
         {
             result = true;
             Configuration m_Configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             string oldHandlersConnected = ConfigurationManager.AppSettings["Handler"];
+            //The list of the current handlers.
             string[] oldHandlers = oldHandlersConnected.Split(';');
-           m_Configuration.AppSettings.Settings.Remove("Handler");
+            m_Configuration.AppSettings.Settings.Remove("Handler");
             StringBuilder newHandlers = new StringBuilder();
             foreach (string h in oldHandlers)
             {
@@ -409,13 +407,6 @@ namespace ImageService.Modal
             }
             string newHandlesString = newHandlers.ToString();
             ConfigurationManager.AppSettings.Set("Handler", newHandlesString);
-         //   return "removed " + handler + " from appConfig";
-
-
-            /*Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            configuration.AppSettings.Settings["Handler"].Value = newHandlesString;
-            configuration.Save();
-            ConfigurationManager.RefreshSection("appSettings");*/
             return "removed " + handler + " from appConfig";
         }
     }

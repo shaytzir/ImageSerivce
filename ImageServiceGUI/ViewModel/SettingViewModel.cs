@@ -1,6 +1,5 @@
 ﻿using ImageServiceGUI.Model;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -9,10 +8,7 @@ using Infrastructure.Enums;
 using Infrastructure.Event;
 using ImageServiceGUI.Communication;
 using Newtonsoft.Json;
-using Infrastructure;
 using Newtonsoft.Json.Linq;
-using System.Windows.Controls;
-using System.Windows;
 
 namespace ImageServiceGUI.ViewModels
 {
@@ -36,7 +32,6 @@ namespace ImageServiceGUI.ViewModels
             
         }
 
-
         /// <summary>
         /// Gets the submit command.
         /// </summary>
@@ -44,7 +39,6 @@ namespace ImageServiceGUI.ViewModels
         /// The submit command.
         /// </value>
         public ICommand RemoveHandlerCommand { get; private set; }
-
 
         /// <summary>
         /// Notifies the property changed.
@@ -57,7 +51,6 @@ namespace ImageServiceGUI.ViewModels
             command.RaiseCanExecuteChanged();
         }
 
-
         /// <summary>
         /// Gets the vm output dir.
         /// </summary>
@@ -68,6 +61,7 @@ namespace ImageServiceGUI.ViewModels
         {
             get { return this._SettingModel.OutputDir; }
         }
+
         /// <summary>
         /// Gets the name of the vm source.
         /// </summary>
@@ -78,6 +72,7 @@ namespace ImageServiceGUI.ViewModels
         {
             get { return this._SettingModel.SourceName; }
         }
+
         /// <summary>
         /// Gets the name of the vm log.
         /// </summary>
@@ -88,6 +83,7 @@ namespace ImageServiceGUI.ViewModels
         {
             get { return this._SettingModel.LogName; }
         }
+
         /// <summary>
         /// Gets the size of the vm thumbnail.
         /// </summary>
@@ -101,6 +97,7 @@ namespace ImageServiceGUI.ViewModels
                 return this._SettingModel.ThumbnailSize;
             }
         }
+
         /// <summary>
         /// Gets the vm handlers.
         /// </summary>
@@ -115,6 +112,7 @@ namespace ImageServiceGUI.ViewModels
         }
 
         private string selectedItem;
+
         /// <summary>
         /// Gets or sets the selected item.
         /// </summary>
@@ -130,6 +128,7 @@ namespace ImageServiceGUI.ViewModels
             }
             get { return this.selectedItem; }
         }
+
         /// <summary>
         /// when deleting a handler.
         /// </summary>
@@ -145,7 +144,6 @@ namespace ImageServiceGUI.ViewModels
             //sends command to the server to delete this handler from the handlers to watch
             GuiClient.Instance.Comm.SendCommand(converted);
         }
-
 
         /// <summary>
         /// Determines whether this button can delete the specified object.

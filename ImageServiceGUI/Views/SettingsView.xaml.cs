@@ -1,7 +1,4 @@
 ﻿using ImageServiceGUI.ViewModels;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace ImageServiceGUI.Views
@@ -14,9 +11,7 @@ namespace ImageServiceGUI.Views
         public SettingsView()
         {
             InitializeComponent();
-            
             this.DataContext = new SettingViewModel();
-            
         }
     }
 }

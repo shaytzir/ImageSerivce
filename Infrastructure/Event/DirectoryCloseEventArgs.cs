@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Event
 {
@@ -28,11 +24,10 @@ namespace Infrastructure.Event
         /// <param name="message">message to log</param>
         public DirectoryCloseEventArgs(string dirPath, string message)
         {
-            // Setting the Directory Name
+            //Setting the Directory Name
             DirectoryPath = dirPath;
-            // Storing the String
+            //Storing the String
             Message = message;
         }
-
     }
 }

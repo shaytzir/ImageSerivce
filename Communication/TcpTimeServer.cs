@@ -1,18 +1,10 @@
-﻿
-using System;
-using System.IO;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Xml.Serialization;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Infrastructure.Event;
 using System.Collections.Generic;
 using Communication;
-//using ImageService.Logging;
 
 public class TcpTimeServer
 {
@@ -92,7 +84,6 @@ public class TcpTimeServer
         m_mutex.ReleaseMutex();
     }
 
-
     /// <summary>
     /// Sends a message from the server to all clients.
     /// </summary>
@@ -145,5 +136,4 @@ public class TcpTimeServer
         });
         task.Start();
     }
-
 }

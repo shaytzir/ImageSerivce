@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Infrastructure.Event;
-using Infrastructure;
 using ImageServiceGUI.Communication;
 using System;
 using Infrastructure.Enums;
@@ -13,10 +11,8 @@ namespace ImageServiceGUI.Model
 {
     public class SettingModel : INotifyPropertyChanged
     {
-
         public event PropertyChangedEventHandler PropertyChanged;
         private GuiClient guiClient;
-
 
         /// <summary>
         /// Constructor.
@@ -47,7 +43,6 @@ namespace ImageServiceGUI.Model
             {
                 RemoveHandler(commandFromSrv);
             }
-
         }
 
         /// <summary>
@@ -99,7 +94,7 @@ namespace ImageServiceGUI.Model
             }
             catch (Exception e)
             {
-
+                return;
             }
         }
         /// <summary>
@@ -113,6 +108,7 @@ namespace ImageServiceGUI.Model
         }
 
         private string m_OutputDir;
+
         /// <summary>
         /// Gets or sets the output dir.
         /// </summary>
@@ -131,7 +127,9 @@ namespace ImageServiceGUI.Model
                 this.NotifyPropertyChanged("OutputDir");
             }
         }
+
         private string m_LogName;
+
         /// <summary>
         /// Gets or sets the name of the log.
         /// </summary>
@@ -150,7 +148,9 @@ namespace ImageServiceGUI.Model
                 this.NotifyPropertyChanged("LogName");
             }
         }
+
         private string m_SourceName;
+
         /// <summary>
         /// Gets or sets the name of the source.
         /// </summary>
@@ -169,7 +169,9 @@ namespace ImageServiceGUI.Model
                 this.NotifyPropertyChanged("SourceName");
             }
         }
+
         private string m_ThumbnailSize;
+
         /// <summary>
         /// Gets or sets the size of the thumbnail.
         /// </summary>
@@ -191,8 +193,8 @@ namespace ImageServiceGUI.Model
 
         public ObservableCollection<string> Handlers { get; set; }
 
-
         private string handlerToRemove;
+
         /// <summary>
         /// Gets or sets the handlers to remove.
         /// </summary>
@@ -211,6 +213,7 @@ namespace ImageServiceGUI.Model
                 OnPropertyChanged("_HandlersToRemove");
             }
         }
+
         /// <summary>
         /// Notifies the property changed.
         /// </summary>

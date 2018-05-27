@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using System.ComponentModel;
 using ImageServiceGUI.Model;
 using System;
@@ -10,6 +8,7 @@ namespace ImageServiceGUI.ViewModels
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         private MainWindowModel model;
+
         /// <summary>
         /// Initializes a new instance of the MainWindowViewModel class.
         /// </summary>
@@ -22,6 +21,7 @@ namespace ImageServiceGUI.ViewModels
                     NotifyPropertyChanged("VM_" + e.PropertyName);
                 };
         }
+
         /// <summary>
         /// sets the color of the background depends on the connection
         /// </summary>
@@ -64,6 +64,5 @@ namespace ImageServiceGUI.ViewModels
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
         }
-
     }
 }

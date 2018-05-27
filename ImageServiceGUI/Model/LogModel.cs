@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Infrastructure.Event;
-using Infrastructure;
 using ImageServiceGUI.Communication;
 using System;
 using Infrastructure.Enums;
@@ -17,10 +15,11 @@ namespace ImageServiceGUI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private GuiClient guiClient;
-      //  private ObservableCollection<MessageRecievedEventArgs> _Logs;
         private ObservableCollection<MessageRecievedEventArgs> _Logs;
 
-
+        /// <summary>
+        /// ObservableCollection of MessageRecievedEventArgs
+        /// </summary>
         public ObservableCollection<MessageRecievedEventArgs> Logs
         {
             get { return this._Logs; }
@@ -30,6 +29,7 @@ namespace ImageServiceGUI.Model
                 this.NotifyPropertyChanged("Logs");
             }
         }
+
         /// <summary>
         /// Gets or sets the name of the log.
         /// </summary>
@@ -40,11 +40,12 @@ namespace ImageServiceGUI.Model
 
         public LogModel()
         {
-            this.Logs = new ObservableCollection<MessageRecievedEventArgs>();
+            //this.Logs = new ObservableCollection<MessageRecievedEventArgs>();
             this.guiClient = GuiClient.Instance;
             //when the client recieves informtaion from the server call the handle function
             guiClient.Comm.InfoFromServer += HandleServerCommands;
         }
+
         /// <summary>
         /// Handles the server commands.
         /// </summary>
@@ -61,6 +62,7 @@ namespace ImageServiceGUI.Model
                 //if it closed a directory
             }
         }
+
         /// <summary>
         /// Updates the log.
         /// </summary>
@@ -72,20 +74,20 @@ namespace ImageServiceGUI.Model
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    int numOfNewLogs = LogList.Count - Logs.Count - 1;
-                    int logsCount = LogList.Count - 1;
-                    for (int i = numOfNewLogs; i >= 0; i--)
+                    //creat log list to output.
+                    this.Logs = new ObservableCollection<MessageRecievedEventArgs>();
+                    for (int i = 0; i < LogList.Count; i++)
                     {
-                        Logs.Insert(0, new MessageRecievedEventArgs() { Status = LogList[logsCount].Status, Message = (string)LogList[logsCount].Message });
-                        logsCount--;
+                        Logs.Insert(0, new MessageRecievedEventArgs() { Status = LogList[i].Status, Message = (string)LogList[i].Message });
                     }
                 }));
             }
             catch (Exception e)
             {
-
+                return;
             }
         }
+
         /// <summary>
         /// Notifies the property changed.
         /// </summary>

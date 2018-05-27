@@ -2,7 +2,6 @@
 using Infrastructure.Event;
 using System;
 using System.Configuration;
-using System.Text;
 using Newtonsoft.Json.Linq;
 using Communication;
 using System.Threading.Tasks;
@@ -123,7 +122,6 @@ namespace ImageService.Server
             this.tcpServer.Close();
         }
 
-
         /// <summary>
         /// Gets a command to execute and called the service proj to do it.
         /// </summary>
@@ -140,7 +138,6 @@ namespace ImageService.Server
             }
         }
 
-
         /// <summary>
         /// Sends the settings and log.
         /// </summary>
@@ -155,17 +152,22 @@ namespace ImageService.Server
             string log = m_controller.ExecuteCommand((int)CommandEnum.LogCommand, null, out success);
             client.SendCommand(log);
         }
+
+        /// <summary>
+        /// event function to handel the sending of the update log list to all clients.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WriteLogMessage(Object sender, MessageRecievedEventArgs e)
         {
             bool success;
             string log = m_controller.ExecuteCommand((int)CommandEnum.LogCommand, null, out success);
-            //JObject json = JsonConvert.DeserializeObject<JObject>(log);
             try
             {
                 tcpServer.SendToAllClients(log);
-            } catch (Exception eeee)
+            } catch (Exception exception)
             {
-
+                return;
             }
         }
 

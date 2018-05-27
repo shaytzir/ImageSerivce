@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Event
 {
@@ -20,6 +16,7 @@ namespace Infrastructure.Event
         /// info for further on executions
         /// </summary>
         public string[] Args { get; set; }
+
         /// <summary>
         /// The Request Directory
         /// </summary>

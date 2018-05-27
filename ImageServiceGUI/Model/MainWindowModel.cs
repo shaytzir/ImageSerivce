@@ -1,16 +1,10 @@
 ﻿using ImageServiceGUI.Communication;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageServiceGUI.Model
 {
     class MainWindowModel : IMainWindowModel
     {
-
         private bool m_Connect;
 
         /// <summary>
@@ -22,6 +16,7 @@ namespace ImageServiceGUI.Model
             m_Connect = client.Connected;
 
         }
+
         /// <summary>
         /// Gets or sets a value indicating whether this MainWindowModel is connected.
         /// </summary>
@@ -54,4 +49,3 @@ namespace ImageServiceGUI.Model
         }
     }
 }
-
