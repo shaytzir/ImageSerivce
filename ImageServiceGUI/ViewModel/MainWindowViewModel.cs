@@ -2,12 +2,13 @@
 using System.ComponentModel;
 using ImageServiceGUI.Model;
 using System;
+using ImageServiceGUI.ViewModel;
 
 namespace ImageServiceGUI.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : IMainWindowViewModel
     {
-        private MainWindowModel model;
+        private IMainWindowModel model;
 
         /// <summary>
         /// Initializes a new instance of the MainWindowViewModel class.

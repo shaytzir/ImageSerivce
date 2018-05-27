@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageServiceGUI.Model
+namespace ImageServiceGUI.ViewModel
 {
-    interface IMainWindowModel : INotifyPropertyChanged
+    interface IMainWindowViewModel : INotifyPropertyChanged
     {
-        bool Connected { get; set; }
+        string VM_Connected { get; }
     }
 }

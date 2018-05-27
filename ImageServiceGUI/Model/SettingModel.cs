@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace ImageServiceGUI.Model
 {
-    public class SettingModel : INotifyPropertyChanged
+    public class SettingModel : ISettingModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private GuiClient guiClient;

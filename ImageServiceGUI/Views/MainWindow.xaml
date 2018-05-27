@@ -8,36 +8,18 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="MVVM"
-        Height="350"
-        Width="525">
+        Height="300"
+        Width="600">
     <Grid x:Name="LayoutRoot"
           Background="{Binding VM_Connected}">
-        <Grid MinWidth="300"
-              MaxWidth="800">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0"
-                        Orientation="Horizontal">
-                <TextBlock HorizontalAlignment="Center"
-                           Width="Auto"
-                           Text="Settings"
-                           FontWeight="Normal"
-                           Foreground="#FFFFFFFF"
-                           FontSize="24"
-                           FontFamily="Comic Sans MS"
-                           VerticalAlignment="Center" />
-            </StackPanel>
-            <TabControl>
-                <TabItem Header="Settings">
-                    <views:SettingsView/>
-                </TabItem>
-                <TabItem Header="Logs">
-                    <views:LogsView/>
-                </TabItem>
-            </TabControl>
-        </Grid>
+
+        <TabControl>
+            <TabItem Header="Settings">
+                <views:SettingsView/>
+            </TabItem>
+            <TabItem Header="Logs">
+                <views:LogsView/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

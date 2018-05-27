@@ -6,13 +6,13 @@ using System.ComponentModel;
 
 namespace ImageServiceGUI.ViewModel
 {
-    class LogViewModel : INotifyPropertyChanged
+    class LogViewModel : ILogViewModel
     {
         #region Notify Changed
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
-        private LogModel _LogModel;
+        private ILogModel _LogModel;
 
         /// <summary>
         /// Constructor

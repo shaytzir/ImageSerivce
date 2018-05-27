@@ -9,15 +9,16 @@ using Infrastructure.Event;
 using ImageServiceGUI.Communication;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ImageServiceGUI.ViewModel;
 
 namespace ImageServiceGUI.ViewModels
 {
-    public class SettingViewModel : INotifyPropertyChanged
+    public class SettingViewModel : ISettingViewModel
     {
         #region Notify Changed
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
-        private SettingModel _SettingModel;
+        private ISettingModel _SettingModel;
 
         /// <summary>
         /// Constructor

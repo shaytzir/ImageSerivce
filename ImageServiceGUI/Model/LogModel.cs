@@ -11,7 +11,7 @@ using ImageService.Logging.Modal;
 
 namespace ImageServiceGUI.Model
 {
-    class LogModel
+    class LogModel :ILogModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private GuiClient guiClient;
@@ -31,16 +31,10 @@ namespace ImageServiceGUI.Model
         }
 
         /// <summary>
-        /// Gets or sets the name of the log.
+        /// Initializes a new instance of the <see cref="LogModel"/> class.
         /// </summary>
-        /// <value>
-        /// The name of the log.
-        /// </value>
-        public JArray LogList { get; set; }
-
         public LogModel()
         {
-            //this.Logs = new ObservableCollection<MessageRecievedEventArgs>();
             this.guiClient = GuiClient.Instance;
             //when the client recieves informtaion from the server call the handle function
             guiClient.Comm.InfoFromServer += HandleServerCommands;
@@ -59,7 +53,6 @@ namespace ImageServiceGUI.Model
             if (commandID == (int)CommandEnum.LogCommand)
             {
                 UpdateLog((string)json["LogList"]);
-                //if it closed a directory
             }
         }
 

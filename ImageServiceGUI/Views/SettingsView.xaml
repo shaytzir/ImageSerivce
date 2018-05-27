@@ -5,39 +5,36 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="300"
-             d:DesignWidth="300">
+             d:DesignWidth="600">
     <Grid x:Name="LayoutRoot">
-        <ScrollViewer Grid.Row="0"
-                      Grid.ColumnSpan="3"
-                      VerticalAlignment="Stretch">
-            <Grid>
-                <Grid Grid.Row="1"
+        <Grid>
+            <Grid Grid.Row="1"
                       Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                </Grid>
-                <StackPanel Grid.Row="2"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+            </Grid>
+            <StackPanel Grid.Row="2"
                       Margin="5">
-                    <TextBlock x:Name="OutputDir" Grid.Row="0" Grid.Column="0"> <Run Text="Output Directory: " FontStyle="Italic" /> <Run Text="{Binding VM_OutputDir, Mode = OneWay}" /></TextBlock>
-                    <TextBlock x:Name="SourceName" Grid.Row="1" Grid.Column="0"> <Run Text="Source Name: " FontStyle="Italic" /> <Run Text="{Binding VM_SourceName, Mode = OneWay}" /></TextBlock>
-                    <TextBlock x:Name="LogName" Grid.Row="2" Grid.Column="0"> <Run Text="Log Name: " FontStyle="Italic" /> <Run Text="{Binding VM_LogName, Mode = OneWay}" /></TextBlock>
-                    <TextBlock x:Name="ThumbnailSize" Grid.Row="3" Grid.Column="0"> <Run Text="Thumbnail Size: " FontStyle="Italic" /> <Run Text="{Binding VM_ThumbnailSize, Mode = OneWay}" /></TextBlock>
-                    <StackPanel Grid.Row="5">
-                        <Button Content="Remove" Grid.Row="4" Grid.ColumnSpan="2" Command="{Binding RemoveHandlerCommand}" />
-                        <ListBox x:Name="LBHandlers"
+                <TextBlock x:Name="OutputDir" Grid.Row="0" Grid.Column="0"> <Run Text="Output Directory: " FontStyle="Italic" /> <Run Text="{Binding VM_OutputDir, Mode = OneWay}" /></TextBlock>
+                <TextBlock x:Name="SourceName" Grid.Row="1" Grid.Column="0"> <Run Text="Source Name: " FontStyle="Italic" /> <Run Text="{Binding VM_SourceName, Mode = OneWay}" /></TextBlock>
+                <TextBlock x:Name="LogName" Grid.Row="2" Grid.Column="0"> <Run Text="Log Name: " FontStyle="Italic" /> <Run Text="{Binding VM_LogName, Mode = OneWay}" /></TextBlock>
+                <TextBlock x:Name="ThumbnailSize" Grid.Row="3" Grid.Column="0"> <Run Text="Thumbnail Size: " FontStyle="Italic" /> <Run Text="{Binding VM_ThumbnailSize, Mode = OneWay}" /></TextBlock>
+                <StackPanel Grid.Row="5">
+                    <Button Content="Remove" Grid.Row="4" Grid.ColumnSpan="2" Command="{Binding RemoveHandlerCommand}" />
+                    <ListBox x:Name="LBHandlers"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"
                                  IsTabStop="False"
                                  ItemsSource="{Binding VM_Handlers}"
                                  Margin="5"
                                  SelectedItem="{Binding SelectedItem, Mode = TwoWay}">
-                        </ListBox>
-                    </StackPanel>
+                    </ListBox>
                 </StackPanel>
-            </Grid>
-        </ScrollViewer>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>
