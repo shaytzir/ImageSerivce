@@ -1,0 +1,40 @@
+﻿@model ImageWebApplication.Models.ImageWeb
+
+@{
+    ViewBag.Title = "ImageWeb";
+}
+
+<h2>Image web</h2>
+<div>
+    <table>
+        <tr>
+            <td>The service is:  @Model.Status </ td >
+        </tr>
+        <tr>
+            @if (Model.Status == "On")
+        {
+            <td>Number of photos:  @Model.NumOfPhotos</td>
+    }
+        </tr>
+    </table>
+</div>
+
+<table class="table">
+    <tr>Students:</tr>
+    <tr>
+        @foreach (var item in Model.Students)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)<br />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)<br />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IDNum)<br />
+            </td>
+        </tr>
+    }
+    </table>
+
