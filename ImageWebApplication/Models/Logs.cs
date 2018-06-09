@@ -24,10 +24,10 @@ namespace ImageWebApplication.Models
             this.objLock = new object();
             this.client = WebClient.Instance;
             client.Comm.InfoFromServer += HandleServerCommands;
-            lock (this.objLock)
+          /*  lock (this.objLock)
             {
                 Monitor.Wait(this.objLock);
-            }
+            }*/
             return;
         }
 
@@ -79,13 +79,13 @@ namespace ImageWebApplication.Models
             catch (Exception e)
             {
                 return;
-            } finally
+            } /*finally
             {
                 lock (this.objLock)
                 {
                     Monitor.Pulse(this.objLock);
                 }
-            }
+            }*/
         }
 
         [Required]

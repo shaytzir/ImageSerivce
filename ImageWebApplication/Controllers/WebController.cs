@@ -15,7 +15,7 @@ namespace ImageWebApplication.Controllers
         static AppConfig appConfig = new AppConfig();
         static ImageWeb imageWeb = new ImageWeb();
         static Approve approve = new Approve();
-      //  private static Logs logs = new Logs();
+        private static Logs logs = new Logs();
         private static string m_handlerToRemove;
 
 
@@ -39,11 +39,11 @@ namespace ImageWebApplication.Controllers
             return View(appConfig);
         }
 
-  /*      public ActionResult Logs()
+        public ActionResult Logs()
         {
             return View(logs);
         }
-        */
+        
         public ActionResult ApproveDeleteHandler(string handlerToRemove)
         {
             m_handlerToRemove = handlerToRemove;

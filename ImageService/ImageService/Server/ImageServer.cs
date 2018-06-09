@@ -149,8 +149,8 @@ namespace ImageService.Server
             //genertate string (serialize to json of all settings from the appconfig)
             string setting = m_controller.ExecuteCommand((int)CommandEnum.GetConfigCommand, null, out success);
             client.SendCommand(setting);
-            /*string log = m_controller.ExecuteCommand((int)CommandEnum.LogCommand, null, out success);
-            client.SendCommand(log);*/
+            string log = m_controller.ExecuteCommand((int)CommandEnum.LogCommand, null, out success);
+            client.SendCommand(log);
         }
 
         /// <summary>
