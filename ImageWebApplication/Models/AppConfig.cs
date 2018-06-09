@@ -9,6 +9,7 @@ using System.Windows;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ImageWebApplication.Models
 {
@@ -16,7 +17,7 @@ namespace ImageWebApplication.Models
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private WebClient client;
-        private bool done;
+        private object objLock;
         private int numOfPhotos;
 
         /// <summary>
@@ -24,35 +25,45 @@ namespace ImageWebApplication.Models
         /// </summary>
         public AppConfig()
         {
+            this.objLock = new object();
             this.client = WebClient.Instance;
             this.Handlers = new ObservableCollection<string>();
-            this.done = false;
-
             //when the client recieves informtaion from the server call the handle function
-            //client.Comm.InfoFromServer += HandleServerCommands;
-            string tryout = client.Comm.RecieveCommand();
-            this.HandleServerCommands(tryout);
-          /*  do
+            client.Comm.InfoFromServer += HandleServerCommands;
+            lock (this.objLock)
             {
-                if (this.done == true)
-                {
-                    break;
-                }
-            } while(this.done == false);*/
+                Monitor.Wait(this.objLock);
+            }
         }
 
         public void AskToRemoveHandler(string jsonCommandInfo)
         {
             this.client.Comm.SendCommand(jsonCommandInfo);
-            string command = this.client.Comm.RecieveCommand();
-            HandleServerCommands(command);
+            WaitWithBlock();
+        }
+
+        private void WaitWithBlock()
+        {
+            lock (this.objLock)
+            {
+                Monitor.Wait(this.objLock);
+            }
+            return;
+        }
+
+        private void PulseTheBlocking()
+        {
+            lock (this.objLock)
+            {
+                Monitor.Pulse(this.objLock);
+            }
         }
         /// <summary>
         /// Handles the server commands.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="commandFromSrv">The command the server sent</param>
-        /*   private void HandleServerCommands(object sender, string commandFromSrv)
+        private void HandleServerCommands(object sender, string commandFromSrv)
            {
                //new Task(() =>
                //{
@@ -69,31 +80,8 @@ namespace ImageWebApplication.Models
                        RemoveHandler(commandFromSrv);
                    }
               // }).Start();
-           }*/
+           }
 
-        /// <summary>
-        /// Handles the server commands.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="commandFromSrv">The command the server sent</param>
-        private void HandleServerCommands(string commandFromSrv)
-        {
-            //new Task(() =>
-            //{
-            JObject json = JsonConvert.DeserializeObject<JObject>(commandFromSrv);
-            int commandID = (int)json["CommandID"];
-            //if it send the configuration info
-            if (commandID == (int)CommandEnum.GetConfigCommand)
-            {
-                UpdateConfig(commandFromSrv);
-                //if it closed a directory
-            }
-            else if (commandID == (int)CommandEnum.CloseCommand)
-            {
-                RemoveHandler(commandFromSrv);
-            }
-            // }).Start();
-        }
 
         /// <summary>
         /// Removes the handler.
@@ -104,16 +92,19 @@ namespace ImageWebApplication.Models
             JObject json = JsonConvert.DeserializeObject<JObject>(commanFromSrv);
             try
             {
-                //Application.Current.Dispatcher.Invoke(new Action(() =>
-                //{
                 string handlerToRemove = (string)json["Handler"];
                 Handlers.Remove(handlerToRemove);
-
-                //}));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                lock (this.objLock)
+                {
+                    Monitor.Pulse(this.objLock);
+                }
             }
         }
 
@@ -143,8 +134,7 @@ namespace ImageWebApplication.Models
                 this.OutputDir = (string)json["OutputDir"];
                 this.ThumbnailSize = (string)json["ThumbSize"];
                 this.NumOfPhotos = getPhotosNum();
-                // }));
-                this.done = true;
+                this.PulseTheBlocking();
             }
             catch (Exception e)
             {

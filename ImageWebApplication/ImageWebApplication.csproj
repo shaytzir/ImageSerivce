@@ -159,6 +159,7 @@
     <Compile Include="Models\AppConfig.cs" />
     <Compile Include="Models\Approve.cs" />
     <Compile Include="Models\ImageWeb.cs" />
+    <Compile Include="Models\Logs.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -173,6 +174,7 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Views\Web\Approve.cshtml" />
+    <Content Include="Views\Web\Logs.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

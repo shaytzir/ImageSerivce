@@ -9,7 +9,7 @@ namespace ImageWebApplication.Communication
     {
         private static WebClient instance;
         private bool connected;
-        public TcpTimeClientSync Comm { get; set; }
+        public TcpTimeClient Comm { get; set; }
 
         /// <summary>
         /// Gets the instance.
@@ -36,7 +36,7 @@ namespace ImageWebApplication.Communication
         {
             //debug
             // should set the ip and port here and then create new tcpClient
-            this.Comm = new TcpTimeClientSync();
+            this.Comm = new TcpTimeClient();
             Comm.Start();
             Connected = Comm.Connected;
         }

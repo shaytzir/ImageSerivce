@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Enums;
-using Infrastructure.Enums;
 using Infrastructure.Event;
 using System;
 using System.Configuration;
