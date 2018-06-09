@@ -6,6 +6,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ImageWebApplication.Communication;
 using System.Windows;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ImageWebApplication.Models
 {
@@ -13,25 +16,70 @@ namespace ImageWebApplication.Models
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private WebClient client;
+        private bool done;
+        private int numOfPhotos;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public AppConfig()
         {
-            this.Handlers = new ObservableCollection<string>();
             this.client = WebClient.Instance;
+            this.Handlers = new ObservableCollection<string>();
+            this.done = false;
+
             //when the client recieves informtaion from the server call the handle function
-            client.Comm.InfoFromServer += HandleServerCommands;
+            //client.Comm.InfoFromServer += HandleServerCommands;
+            string tryout = client.Comm.RecieveCommand();
+            this.HandleServerCommands(tryout);
+          /*  do
+            {
+                if (this.done == true)
+                {
+                    break;
+                }
+            } while(this.done == false);*/
         }
+
+        public void AskToRemoveHandler(string jsonCommandInfo)
+        {
+            this.client.Comm.SendCommand(jsonCommandInfo);
+            string command = this.client.Comm.RecieveCommand();
+            HandleServerCommands(command);
+        }
+        /// <summary>
+        /// Handles the server commands.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="commandFromSrv">The command the server sent</param>
+        /*   private void HandleServerCommands(object sender, string commandFromSrv)
+           {
+               //new Task(() =>
+               //{
+                   JObject json = JsonConvert.DeserializeObject<JObject>(commandFromSrv);
+                   int commandID = (int)json["CommandID"];
+                   //if it send the configuration info
+                   if (commandID == (int)CommandEnum.GetConfigCommand)
+                   {
+                       UpdateConfig(commandFromSrv);
+                       //if it closed a directory
+                   }
+                   else if (commandID == (int)CommandEnum.CloseCommand)
+                   {
+                       RemoveHandler(commandFromSrv);
+                   }
+              // }).Start();
+           }*/
 
         /// <summary>
         /// Handles the server commands.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="commandFromSrv">The command the server sent</param>
-        private void HandleServerCommands(object sender, string commandFromSrv)
+        private void HandleServerCommands(string commandFromSrv)
         {
+            //new Task(() =>
+            //{
             JObject json = JsonConvert.DeserializeObject<JObject>(commandFromSrv);
             int commandID = (int)json["CommandID"];
             //if it send the configuration info
@@ -44,6 +92,7 @@ namespace ImageWebApplication.Models
             {
                 RemoveHandler(commandFromSrv);
             }
+            // }).Start();
         }
 
         /// <summary>
@@ -59,6 +108,7 @@ namespace ImageWebApplication.Models
                 //{
                 string handlerToRemove = (string)json["Handler"];
                 Handlers.Remove(handlerToRemove);
+
                 //}));
             }
             catch (Exception e)
@@ -66,6 +116,7 @@ namespace ImageWebApplication.Models
                 Console.WriteLine(e.Message);
             }
         }
+
 
         /// <summary>
         /// Updates the configuration.
@@ -91,13 +142,28 @@ namespace ImageWebApplication.Models
                 this.SourceName = (string)json["SourceName"];
                 this.OutputDir = (string)json["OutputDir"];
                 this.ThumbnailSize = (string)json["ThumbSize"];
+                this.NumOfPhotos = getPhotosNum();
                 // }));
+                this.done = true;
             }
             catch (Exception e)
             {
                 return;
             }
         }
+
+        private int getPhotosNum()
+        {
+            int NumOfPhotos = 0;
+                string path = Path.Combine(this.m_OutputDir, "Thumbnails");
+                if (Directory.Exists(path))
+                {
+                    NumOfPhotos = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories).Count();
+                }
+            return NumOfPhotos;
+            
+        }
+
         /// <summary>
         /// Called when  a property changed.
         /// </summary>
@@ -215,6 +281,17 @@ namespace ImageWebApplication.Models
             }
         }
 
+        public int NumOfPhotos
+        {
+            get
+            {
+                return numOfPhotos;
+            }
+            set
+            {
+                numOfPhotos = value;
+            }
+        }
         /// <summary>
         /// Notifies the property changed.
         /// </summary>

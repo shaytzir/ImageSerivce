@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using ImageWebApplication.Models;
 using System.Threading;
+using Infrastructure.Enums;
+using Newtonsoft.Json;
+using System;
 
 namespace ImageWebApplication.Controllers
 {
     public class WebController : Controller
     {
+
         static AppConfig appConfig = new AppConfig();
         static ImageWeb imageWeb = new ImageWeb();
         static Approve approve = new Approve();
+        private static string m_handlerToRemove;
+
+
+
         // GET: First
         public ActionResult Approve()
         {
@@ -20,15 +28,31 @@ namespace ImageWebApplication.Controllers
         [HttpGet]
         public ActionResult MainView()
         {
-            string imagePath = appConfig.OutputDir;
-            imageWeb.PhotosNum(imagePath);
+            ViewBag.Status = imageWeb.Status;
+            ViewBag.NumOfPhotos = appConfig.NumOfPhotos;
             return View(imageWeb);
         }
 
         public ActionResult Config()
         {
-
             return View(appConfig);
+        }
+
+        public ActionResult ApproveDeleteHandler(string handlerToRemove)
+        {
+            m_handlerToRemove = handlerToRemove;
+            //return View();
+            return RedirectToAction("Approve");
+
+        }
+       
+       public ActionResult DeleteHandlerOK()
+        {
+            JObject json = new JObject();
+            json["CommandID"] = (int)CommandEnum.CloseCommand;
+            json["Handler"] = m_handlerToRemove;
+            appConfig.AskToRemoveHandler(JsonConvert.SerializeObject(json));
+            return RedirectToAction("Config");
         }
 
         /*[HttpGet]

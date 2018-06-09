@@ -8,13 +8,13 @@
 <div>
     <table>
         <tr>
-            <td>The service is:  @Model.Status </ td >
+            <td>The service is:  @ViewBag.Status </ td >
         </tr>
         <tr>
-            @if (Model.Status == "On")
-        {
-            <td>Number of photos:  @Model.NumOfPhotos</td>
-    }
+            
+        
+            <td>Number of photos: @ViewBag.NumOfPhotos</td>
+    
         </tr>
     </table>
 </div>

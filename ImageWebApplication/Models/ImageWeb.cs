@@ -25,6 +25,7 @@ namespace ImageWebApplication.Models
             Students = new List<Student>();
             SetProp(client, students);
         }
+
         public void SetProp(WebClient client, string[] students)
         {
             if (!m_Connect)

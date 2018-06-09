@@ -28,8 +28,8 @@
         {
         <tr>
             <td>
-                @Html.ActionLink(item, "Approve")
+                @Html.ActionLink(@item, "ApproveDeleteHandler", new { handlerToRemove = item})
             </td>
         </tr>
-    }
+        }
     </table>

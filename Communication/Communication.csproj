@@ -50,6 +50,7 @@
     <Compile Include="IClientHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TcpTimeClient .cs" />
+    <Compile Include="TcpTimeClientSync.cs" />
     <Compile Include="TcpTimeServer.cs" />
   </ItemGroup>
   <ItemGroup>
