@@ -178,6 +178,8 @@
     </None>
     <Content Include="Views\Web\Approve.cshtml" />
     <Content Include="Views\Web\Logs.cshtml" />
+    <Content Include="Views\Web\Photos.cshtml" />
+    <Content Include="Views\Web\PhotoView.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

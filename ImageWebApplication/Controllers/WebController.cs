@@ -38,11 +38,30 @@ namespace ImageWebApplication.Controllers
             return View(imageWeb);
         }
 
+
         [HttpGet]
         public ActionResult Photos()
         {
             photos.GetAllPhotos(appConfig.OutputDir);
-            return View(approve);
+            return View(photos.ImageList);
+        }
+
+        public ActionResult DeletePhotoOK(string thumbUrl)
+        {
+           // photos.DeletePhoto(thumbUrl);
+            return RedirectToAction("Photos");
+
+        }
+        /// <summary>
+        /// Photoes the view.
+        /// </summary>
+        /// <param name="photoToViewPath">The photo to view path.</param>
+        /// <param name="dir">The dir.</param>
+        /// <returns></returns>
+        public ActionResult PhotoView(string photoToViewPath, string dir)
+        {
+            PhotoInfo photo = new PhotoInfo(photoToViewPath, dir);
+            return View(photo);
         }
 
         public ActionResult Config()
@@ -70,6 +89,7 @@ namespace ImageWebApplication.Controllers
             appConfig.AskToRemoveHandler(JsonConvert.SerializeObject(json));
             return RedirectToAction("Config");
         }
+
 
         /*[HttpGet]
         public JObject GetStudent()

@@ -14,8 +14,6 @@ namespace ImageWebApplication.Models
         public Photos()
         {
             ImageList = new List<PhotoInfo>();
-            //this.outputDir = outputDirectory;
-            //this.GetAllPhotos();
         }
 
         public List<PhotoInfo> ImageList
@@ -56,6 +54,28 @@ namespace ImageWebApplication.Models
 
                     }
                 }
+            }
+        }
+
+
+        public void DeletePhoto(string thumbUrl)
+        {
+            try
+            {
+                foreach (PhotoInfo photo in ImageList)
+                {
+                    if (photo.ImageFullUrl.Equals(thumbUrl))
+                    {
+                        File.Delete(photo.ImageFullUrl);
+                        File.Delete(photo.ImageFullThumbnailUrl);
+                        this.ImageList.Remove(photo);
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
     }

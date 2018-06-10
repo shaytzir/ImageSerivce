@@ -9,14 +9,14 @@ namespace ImageWebApplication.Models
 {
     public class PhotoInfo
     {
-        private string ImageUrl;
         public PhotoInfo(string thumbFullPath, string outputDirName) 
         {
             try
             {
+                OutputDir = outputDirName;
                 ImageFullThumbnailUrl = thumbFullPath;
                 ImageFullUrl = thumbFullPath.Replace(@"Thumbnails\", string.Empty);
-                Name = Path.GetFileNameWithoutExtension(ImageFullThumbnailUrl);
+                PhotoName = Path.GetFileNameWithoutExtension(ImageFullThumbnailUrl);
                 Month = Path.GetFileNameWithoutExtension(Path.GetDirectoryName(ImageFullThumbnailUrl));
                 Year = Path.GetFileNameWithoutExtension(Path.GetDirectoryName((Path.GetDirectoryName(ImageFullThumbnailUrl))));
                 ImageRelativePathThumbnail = @"~\" + Path.GetFileName(outputDirName) + thumbFullPath.Replace(outputDirName, string.Empty);
@@ -31,7 +31,7 @@ namespace ImageWebApplication.Models
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Name")]
-        public string Name { get; set; }
+        public string PhotoName { get; set; }
 
         [Required]
         [DataType(DataType.Text)]
@@ -62,5 +62,10 @@ namespace ImageWebApplication.Models
         [DataType(DataType.ImageUrl)]
         [Display(Name = "ImageFullUrl")]
         public string ImageFullUrl { get; set; }
+        
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name ="OutputDir")]
+        public string OutputDir { get; set; }
     }
 }
