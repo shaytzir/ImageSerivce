@@ -1,4 +1,4 @@
-﻿namespace ImageService.Logging.Modal
+﻿namespace Infrastructure.Modal
 {
     /// <summary>
     /// enum for possible types of message: info/warning/fail

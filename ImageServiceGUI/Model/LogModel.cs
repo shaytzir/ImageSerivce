@@ -7,7 +7,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Windows;
 using System.Collections.Generic;
-using ImageService.Logging.Modal;
+using Infrastructure.Enums;
+using Infrastructure.Modal;
+using Infrastructure.Event;
 
 namespace ImageServiceGUI.Model
 {

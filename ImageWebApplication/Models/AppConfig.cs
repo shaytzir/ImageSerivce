@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace ImageWebApplication.Models
 {
-    public class AppConfig : INotifyPropertyChanged
+    public class AppConfig 
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private WebClient client;
@@ -30,10 +30,6 @@ namespace ImageWebApplication.Models
             this.Handlers = new ObservableCollection<string>();
             //when the client recieves informtaion from the server call the handle function
             client.Comm.InfoFromServer += HandleServerCommands;
-            lock (this.objLock)
-            {
-                Monitor.Wait(this.objLock);
-            }
         }
 
         public void AskToRemoveHandler(string jsonCommandInfo)
@@ -42,7 +38,7 @@ namespace ImageWebApplication.Models
             WaitWithBlock();
         }
 
-        private void WaitWithBlock()
+        public void WaitWithBlock()
         {
             lock (this.objLock)
             {
@@ -181,7 +177,6 @@ namespace ImageWebApplication.Models
             set
             {
                 m_OutputDir = value;
-                this.NotifyPropertyChanged("OutputDir");
             }
         }
 
@@ -202,7 +197,6 @@ namespace ImageWebApplication.Models
             set
             {
                 m_LogName = value;
-                this.NotifyPropertyChanged("LogName");
             }
         }
 
@@ -223,7 +217,6 @@ namespace ImageWebApplication.Models
             set
             {
                 m_SourceName = value;
-                this.NotifyPropertyChanged("SourceName");
             }
         }
 
@@ -244,7 +237,6 @@ namespace ImageWebApplication.Models
             set
             {
                 m_ThumbnailSize = value;
-                this.NotifyPropertyChanged("ThumbnailSize");
             }
         }
 
@@ -281,14 +273,6 @@ namespace ImageWebApplication.Models
             {
                 numOfPhotos = value;
             }
-        }
-        /// <summary>
-        /// Notifies the property changed.
-        /// </summary>
-        /// <param name="propName">Name of the property.</param>
-        public void NotifyPropertyChanged(string propName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
     }
 }

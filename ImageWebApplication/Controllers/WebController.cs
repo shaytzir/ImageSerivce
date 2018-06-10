@@ -4,6 +4,8 @@ using System.Web.Mvc;
 using ImageWebApplication.Models;
 using System.Threading;
 using Infrastructure.Enums;
+using Infrastructure.Modal;
+using Infrastructure.Event;
 using Newtonsoft.Json;
 using System;
 
@@ -13,8 +15,9 @@ namespace ImageWebApplication.Controllers
     {
         static AppConfig appConfig = new AppConfig();
         static Logs logs = new Logs();
-        static ImageWeb imageWeb = new ImageWeb();
         static Approve approve = new Approve();
+        static Photos photos = new Photos();
+        static ImageWeb imageWeb = new ImageWeb();
         private static string m_handlerToRemove;
         public object objLock;
 
@@ -30,8 +33,16 @@ namespace ImageWebApplication.Controllers
         public ActionResult MainView()
         {
             ViewBag.Status = imageWeb.Status;
+            appConfig.WaitWithBlock();
             ViewBag.NumOfPhotos = appConfig.NumOfPhotos;
             return View(imageWeb);
+        }
+
+        [HttpGet]
+        public ActionResult Photos()
+        {
+            photos.GetAllPhotos(appConfig.OutputDir);
+            return View(approve);
         }
 
         public ActionResult Config()
@@ -41,18 +52,12 @@ namespace ImageWebApplication.Controllers
 
         public ActionResult Logs()
         {
-            objLock = new object();
-            lock (logs.LogList)
-            {
-                Monitor.Wait(logs.LogList);
-            }
-            return View(logs);
+            return View(logs._Logs);
         }
         
         public ActionResult ApproveDeleteHandler(string handlerToRemove)
         {
             m_handlerToRemove = handlerToRemove;
-            //return View();
             return RedirectToAction("Approve");
 
         }

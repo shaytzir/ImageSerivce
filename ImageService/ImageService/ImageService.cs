@@ -12,7 +12,9 @@ using System.Runtime.InteropServices;
 using System.Configuration;
 using ImageService.Logging;
 using ImageService.Server;
-using ImageService.Logging.Modal;
+using Infrastructure.Enums;
+using Infrastructure.Modal;
+using Infrastructure.Event;
 
 namespace ImageService
 {

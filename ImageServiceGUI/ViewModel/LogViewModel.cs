@@ -1,4 +1,6 @@
-﻿using ImageService.Logging.Modal;
+﻿using Infrastructure.Enums;
+using Infrastructure.Modal;
+using Infrastructure.Event;
 using ImageServiceGUI.Model;
 using System;
 using System.Collections.ObjectModel;

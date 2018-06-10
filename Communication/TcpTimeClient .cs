@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Infrastructure;
+using Infrastructure.Modal;
 
 using System.Threading;
 
@@ -19,8 +19,6 @@ public sealed class TcpTimeClient
     private int port;
     private static Mutex m_mutex = new Mutex();
 
-
-    private Settings _SettingObj;
 
     public TcpTimeClient()
     {

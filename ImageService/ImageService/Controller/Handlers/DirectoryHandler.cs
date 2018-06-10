@@ -4,7 +4,9 @@ using System;
 using System.IO;
 using ImageService.Logging;
 using System.Collections.Generic;
-using ImageService.Logging.Modal;
+using Infrastructure.Enums;
+using Infrastructure.Modal;
+using Infrastructure.Event;
 using System.Threading.Tasks;
 
 namespace ImageService.Controller.Handlers
@@ -63,7 +65,7 @@ namespace ImageService.Controller.Handlers
                 //add the working watcher to the list
                 m_dirWatcher.Add(watcher);
             }
-            this.m_logging.Log("Watching over " + this.m_path, Logging.Modal.MessageTypeEnum.INFO);
+            this.m_logging.Log("Watching over " + this.m_path, MessageTypeEnum.INFO);
         }
 
         /// <summary>
@@ -120,11 +122,11 @@ namespace ImageService.Controller.Handlers
                 string logMessage = this.m_controller.ExecuteCommand(e.CommandID, e.Args, out result);
                 if (result)
                 {
-                    this.m_logging.Log(logMessage, Logging.Modal.MessageTypeEnum.INFO);
+                    this.m_logging.Log(logMessage, MessageTypeEnum.INFO);
                 }
                 else
                 {
-                    this.m_logging.Log(logMessage, Logging.Modal.MessageTypeEnum.FAIL);
+                    this.m_logging.Log(logMessage, MessageTypeEnum.FAIL);
                 }
             });
             //running the task

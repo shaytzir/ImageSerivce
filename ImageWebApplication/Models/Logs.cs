@@ -1,4 +1,4 @@
-﻿using ImageService.Logging.Modal;
+﻿using Infrastructure.Modal;
 using ImageWebApplication.Communication;
 using Infrastructure.Enums;
 using Newtonsoft.Json;
@@ -16,9 +16,7 @@ namespace ImageWebApplication.Models
     
     public class Logs
     {
-        //private ObservableCollection<MessageRecievedEventArgs> _Logs;
         private WebClient client;
-        //public object objLock;
         public List<MessageRecievedEventArgs> LogList;
         public Logs()
         {
@@ -26,30 +24,8 @@ namespace ImageWebApplication.Models
             this.client = WebClient.Instance;
             client.Comm.InfoFromServer += HandleServerCommands;
             this.LogList = new List<MessageRecievedEventArgs>();
-            /*lock (this.objLock)
-            {
-                Monitor.Wait(this.LogList);
-            }*/
             return;
         }
-
-
-        /*private void WaitWithBlock()
-        {
-            lock (this.objLock)
-            {
-                Monitor.Wait(this.objLock);
-            }
-            return;
-        }
-
-        private void PulseTheBlocking()
-        {
-            lock (this.objLock)
-            {
-                Monitor.Pulse(this.objLock);
-            }
-        }*/
 
         private void HandleServerCommands(object sender, string commandFromSrv)
         {
@@ -60,7 +36,7 @@ namespace ImageWebApplication.Models
             {
                 UpdateLog((string)json["LogList"]);
             }
-            Monitor.Pulse(LogList);
+
         }
 
         /// <summary>
@@ -73,34 +49,28 @@ namespace ImageWebApplication.Models
             try
             {
                     //creat log list to output.
-                    this._Logs = new List<MessageRecievedEventArgs>();
+                    this._Logs = new List<LogEntry>();
                     for (int i = 0; i < LogList.Count; i++)
                     {
-                        _Logs.Insert(0, new MessageRecievedEventArgs() { Status = LogList[i].Status, Message = (string)LogList[i].Message });
+                        _Logs.Insert(0, new LogEntry() { Status = LogList[i].Status.ToString(), Message = (string)LogList[i].Message });
                     }
             }
             catch (Exception e)
             {
                 return;
-            } /*finally
-            {
-                lock (this.objLock)
-                {
-                    Monitor.Pulse(this.objLock);
-                }
-            }*/
+            }
         }
 
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Logs")]
-        public List<MessageRecievedEventArgs> _Logs { get; set; }
+        public List<LogEntry> _Logs { get; set; }
 
-        [HttpPost]
+        /*[HttpPost]
         public Object GetLogInfo()
         {
-            List<MessageRecievedEventArgs> logInfo = new List<MessageRecievedEventArgs>();
-            foreach(MessageRecievedEventArgs log in _Logs)
+            List<LogEntry> logInfo = new List<LogEntry>();
+            foreach(LogEntry log in _Logs)
             {
                 if ((int)log.Status == 1)
                 {
@@ -108,6 +78,6 @@ namespace ImageWebApplication.Models
                 }
             }
             return logInfo;
-        }
+        }*/
     }
 }

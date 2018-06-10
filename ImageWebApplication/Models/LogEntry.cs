@@ -1,18 +1,20 @@
-﻿using System;
+﻿using Infrastructure.Modal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
-namespace Infrastructure.Modal
+namespace ImageWebApplication.Models
 {
-    /// <summary>
-    /// defines a message
-    /// </summary>
-    public class MessageRecievedEventArgs : EventArgs
+    public class LogEntry
     {
-        public MessageTypeEnum _Status;
+        public string _Status;
 
         /// <summary>
         /// setter/getter for the status of the message - info/fail/warning
         /// </summary>
-        public MessageTypeEnum Status {
+        public string Status
+        {
             get
             {
                 return _Status;
@@ -28,7 +30,8 @@ namespace Infrastructure.Modal
         /// <summary>
         /// setter/getter for the message infos
         /// </summary>
-        public string Message {
+        public string Message
+        {
             get
             {
                 return _Message;

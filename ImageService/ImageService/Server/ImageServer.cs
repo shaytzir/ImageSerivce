@@ -10,7 +10,9 @@ using ImageService.Controller;
 using ImageService.Logging;
 using ImageService.Modal;
 using Newtonsoft.Json;
-using ImageService.Logging.Modal;
+using Infrastructure.Enums;
+using Infrastructure.Modal;
+using Infrastructure.Event;
 
 namespace ImageService.Server
 {
@@ -94,14 +96,14 @@ namespace ImageService.Server
         {
             bool result;
             //log the relevant message
-            m_logging.Log(args.Message, Logging.Modal.MessageTypeEnum.INFO);
+            m_logging.Log(args.Message, MessageTypeEnum.INFO);
             IDirectoryHandler handler = (IDirectoryHandler)sender;
             //calls the controller to remove the directory from
             //the config so it wont be showing at the next connecting client
             string[] forRemove = { args.DirectoryPath };
             string deleteFromConfig = this.m_controller.
                 ExecuteCommand((int)CommandEnum.RemoveHandlerFromConfig, forRemove, out result);
-            this.m_logging.Log(deleteFromConfig, Logging.Modal.MessageTypeEnum.INFO);
+            this.m_logging.Log(deleteFromConfig, MessageTypeEnum.INFO);
             //unsubscribe the functions from relevant events
             CommandRecieved -= handler.OnCommandRecieved;
             handler.DirectoryClose -= ClosingServer;
