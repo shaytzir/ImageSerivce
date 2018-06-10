@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
+using System.Web.Mvc;
 
 namespace ImageWebApplication.Models
 { 
@@ -17,22 +18,23 @@ namespace ImageWebApplication.Models
     {
         //private ObservableCollection<MessageRecievedEventArgs> _Logs;
         private WebClient client;
-        private object objLock;
-
+        //public object objLock;
+        public List<MessageRecievedEventArgs> LogList;
         public Logs()
         {
-            this.objLock = new object();
+            //this.objLock = new object();
             this.client = WebClient.Instance;
             client.Comm.InfoFromServer += HandleServerCommands;
-          /*  lock (this.objLock)
+            this.LogList = new List<MessageRecievedEventArgs>();
+            /*lock (this.objLock)
             {
-                Monitor.Wait(this.objLock);
+                Monitor.Wait(this.LogList);
             }*/
             return;
         }
 
 
-        private void WaitWithBlock()
+        /*private void WaitWithBlock()
         {
             lock (this.objLock)
             {
@@ -47,7 +49,7 @@ namespace ImageWebApplication.Models
             {
                 Monitor.Pulse(this.objLock);
             }
-        }
+        }*/
 
         private void HandleServerCommands(object sender, string commandFromSrv)
         {
@@ -58,6 +60,7 @@ namespace ImageWebApplication.Models
             {
                 UpdateLog((string)json["LogList"]);
             }
+            Monitor.Pulse(LogList);
         }
 
         /// <summary>
@@ -66,7 +69,7 @@ namespace ImageWebApplication.Models
         /// <param name="CommandFromSrv">The MSG.</param>
         private void UpdateLog(string CommandFromSrv)
         {
-            List<MessageRecievedEventArgs> LogList = JsonConvert.DeserializeObject<List<MessageRecievedEventArgs>>(CommandFromSrv);
+            this.LogList = JsonConvert.DeserializeObject<List<MessageRecievedEventArgs>>(CommandFromSrv);
             try
             {
                     //creat log list to output.
@@ -92,5 +95,19 @@ namespace ImageWebApplication.Models
         [DataType(DataType.Text)]
         [Display(Name = "Logs")]
         public List<MessageRecievedEventArgs> _Logs { get; set; }
+
+        [HttpPost]
+        public Object GetLogInfo()
+        {
+            List<MessageRecievedEventArgs> logInfo = new List<MessageRecievedEventArgs>();
+            foreach(MessageRecievedEventArgs log in _Logs)
+            {
+                if ((int)log.Status == 1)
+                {
+                    logInfo.Add(log);
+                }
+            }
+            return logInfo;
+        }
     }
 }

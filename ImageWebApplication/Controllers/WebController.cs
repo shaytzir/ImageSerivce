@@ -11,12 +11,12 @@ namespace ImageWebApplication.Controllers
 {
     public class WebController : Controller
     {
-
         static AppConfig appConfig = new AppConfig();
+        static Logs logs = new Logs();
         static ImageWeb imageWeb = new ImageWeb();
         static Approve approve = new Approve();
-        private static Logs logs = new Logs();
         private static string m_handlerToRemove;
+        public object objLock;
 
 
 
@@ -41,6 +41,11 @@ namespace ImageWebApplication.Controllers
 
         public ActionResult Logs()
         {
+            objLock = new object();
+            lock (logs.LogList)
+            {
+                Monitor.Wait(logs.LogList);
+            }
             return View(logs);
         }
         
