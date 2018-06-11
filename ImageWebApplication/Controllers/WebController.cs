@@ -71,9 +71,15 @@ namespace ImageWebApplication.Controllers
 
         public ActionResult Logs()
         {
-            return View(logs._Logs);
+            return View(logs);
         }
-        
+        [HttpGet]
+        public JObject GetLogs(string filter)
+        {
+            JObject obj = (JObject)JToken.FromObject(logs.GetLogInfo(filter));
+            return obj;
+        }
+
         public ActionResult ApproveDeleteHandler(string handlerToRemove)
         {
             m_handlerToRemove = handlerToRemove;
