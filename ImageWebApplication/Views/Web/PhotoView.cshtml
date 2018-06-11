@@ -8,10 +8,10 @@
 
 
 <div class="circular-image">
-    <img src="@Url.Content(Model.ImageRelativePath)" alt="" class="circular-image" style="width:auto; height:auto; max-width:100%; max-height:100%;">
+    <img src="@Url.Content(Model.PhotoRelativePath)" alt="" class="circular-image" style="width:auto; height:auto; max-width:100%; max-height:100%;">
     <div class="caption">
         <h4>@Model.PhotoName</h4>
         <p>Year: @Model.Year Month: @Model.Month</p>
-        <p> <a href="@Url.Action("DeletePhotoOK", "Web", new { fullUrl = Model.ImageFullThumbnailUrl })" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
+        <p> <a href="@Url.Action("PhotoDelete", "Web", new { fullUrlThumb = Model.PhotoThumbFullUrl, dir = Model.OutputDir })" id="btnDelete" class="btn btn-danger btn-xs" role="button">Delete</a></p>
     </div>
 </div>
