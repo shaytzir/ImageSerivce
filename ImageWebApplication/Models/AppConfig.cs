@@ -15,10 +15,10 @@ namespace ImageWebApplication.Models
 {
     public class AppConfig 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
         private WebClient client;
         private object objLock;
         private int numOfPhotos;
+        public bool InitDone { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -26,6 +26,7 @@ namespace ImageWebApplication.Models
         public AppConfig()
         {
             this.objLock = new object();
+            this.InitDone = false;
             this.client = WebClient.Instance;
             this.Handlers = new ObservableCollection<string>();
             //when the client recieves informtaion from the server call the handle function
@@ -47,7 +48,7 @@ namespace ImageWebApplication.Models
             return;
         }
 
-        private void PulseTheBlocking()
+        public void PulseTheBlocking()
         {
             lock (this.objLock)
             {
@@ -130,6 +131,7 @@ namespace ImageWebApplication.Models
                 this.OutputDir = (string)json["OutputDir"];
                 this.ThumbnailSize = (string)json["ThumbSize"];
                 this.NumOfPhotos = getPhotosNum();
+                this.InitDone = true;
                 this.PulseTheBlocking();
             }
             catch (Exception e)
@@ -150,15 +152,6 @@ namespace ImageWebApplication.Models
             
         }
 
-        /// <summary>
-        /// Called when  a property changed.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        protected void OnPropertyChanged(string name)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
-        }
 
         private string m_OutputDir;
 
@@ -259,7 +252,6 @@ namespace ImageWebApplication.Models
             set
             {
                 this.handlerToRemove = value;
-                OnPropertyChanged("_HandlersToRemove");
             }
         }
 
@@ -267,7 +259,7 @@ namespace ImageWebApplication.Models
         {
             get
             {
-                return numOfPhotos;
+                return getPhotosNum();
             }
             set
             {

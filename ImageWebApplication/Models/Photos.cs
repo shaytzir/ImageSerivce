@@ -13,12 +13,17 @@ namespace ImageWebApplication.Models
         private static string[] extends = { ".jpg", ".bmp", ".png", ".gif" };
         public Photos()
         {
-            ImageList = new List<PhotoInfo>();
+            PhotosList = new List<PhotoInfo>();
         }
 
-        public List<PhotoInfo> ImageList
+        public List<PhotoInfo> PhotosList
         {
             get; set;
+        }
+
+        public int PhotosNum
+        {
+            get { return this.PhotosList.Count(); }
         }
 
         public void GetAllPhotos(string outputDirectory)
@@ -36,15 +41,8 @@ namespace ImageWebApplication.Models
                         {
                             try
                             {
-                                string thumbRelPath= @"~\" + Path.GetFileName(outputDir) + thumb.FullName.Replace(outputDir, string.Empty);
-                                string name = thumb.Name;
-                                string photoRelPath = thumbRelPath.Replace("Thumbnails\\", string.Empty);
-                                int yearInt = int.Parse(year.Name);
-                                int monthInt = int.Parse(month.Name);
                                 PhotoInfo photo = new PhotoInfo(thumb.FullName, outputDir);
-                                this.ImageList.Add(photo);
-                                //                    PhotoInfo photo = new PhotoInfo(name, path, thumbnailPath, year, month, thumb.FullName);
-                                //                  this.ImageList.Add(photo);
+                                this.PhotosList.Add(photo);
                             }
                             catch (Exception)
                             {
@@ -62,13 +60,13 @@ namespace ImageWebApplication.Models
         {
             try
             {
-                foreach (PhotoInfo photo in ImageList)
+                foreach (PhotoInfo photo in PhotosList)
                 {
-                    if (photo.ImageFullUrl.Equals(thumbUrl))
+                    if (photo.PhotoThumbFullUrl.Equals(thumbUrl))
                     {
-                        File.Delete(photo.ImageFullUrl);
-                        File.Delete(photo.ImageFullThumbnailUrl);
-                        this.ImageList.Remove(photo);
+                        this.PhotosList.Remove(photo);
+                        File.Delete(photo.PhotoFullUrl);
+                        File.Delete(photo.PhotoThumbFullUrl);
                         break;
                     }
                 }

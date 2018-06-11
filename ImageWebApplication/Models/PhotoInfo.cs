@@ -14,13 +14,13 @@ namespace ImageWebApplication.Models
             try
             {
                 OutputDir = outputDirName;
-                ImageFullThumbnailUrl = thumbFullPath;
-                ImageFullUrl = thumbFullPath.Replace(@"Thumbnails\", string.Empty);
-                PhotoName = Path.GetFileNameWithoutExtension(ImageFullThumbnailUrl);
-                Month = Path.GetFileNameWithoutExtension(Path.GetDirectoryName(ImageFullThumbnailUrl));
-                Year = Path.GetFileNameWithoutExtension(Path.GetDirectoryName((Path.GetDirectoryName(ImageFullThumbnailUrl))));
-                ImageRelativePathThumbnail = @"~\" + Path.GetFileName(outputDirName) + thumbFullPath.Replace(outputDirName, string.Empty);
-                ImageRelativePath = ImageRelativePathThumbnail.Replace(@"Thumbnails\", string.Empty);
+                PhotoThumbFullUrl = thumbFullPath;
+                PhotoFullUrl = thumbFullPath.Replace(@"Thumbnails\", string.Empty);
+                PhotoName = Path.GetFileNameWithoutExtension(PhotoThumbFullUrl);
+                Month = Path.GetFileNameWithoutExtension(Path.GetDirectoryName(PhotoThumbFullUrl));
+                Year = Path.GetFileNameWithoutExtension(Path.GetDirectoryName((Path.GetDirectoryName(PhotoThumbFullUrl))));
+                PhotoThumbRelativePath = @"~\" + Path.GetFileName(outputDirName) + thumbFullPath.Replace(outputDirName, string.Empty);
+                PhotoRelativePath = PhotoThumbRelativePath.Replace(@"Thumbnails\", string.Empty);
             }
             catch (Exception e)
             {
@@ -35,8 +35,8 @@ namespace ImageWebApplication.Models
 
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "Year")]
-        public string Year { get; set; }
+        [Display(Name = "OutputDir")]
+        public string OutputDir { get; set; }
 
         [Required]
         [DataType(DataType.Text)]
@@ -44,28 +44,29 @@ namespace ImageWebApplication.Models
         public string Month { get; set; }
 
         [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Year")]
+        public string Year { get; set; }
+
+        [Required]
+        [DataType(DataType.ImageUrl)]
+        [Display(Name = "PhotoFullUrl")]
+        public string PhotoFullUrl { get; set; }
+
+        [Required]
         [DataType(DataType.ImageUrl)]
         [Display(Name = "ImageUrl")]
-        public string ImageFullThumbnailUrl { get; set; }
+        public string PhotoThumbFullUrl { get; set; }
 
         [Required]
         [DataType(DataType.ImageUrl)]
-        [Display(Name = "ImageRelativePathThumbnail")]
-        public string ImageRelativePathThumbnail { get; set; }
+        [Display(Name = "PhotoRelativePath")]
+        public string PhotoRelativePath { get; set; }
 
         [Required]
         [DataType(DataType.ImageUrl)]
-        [Display(Name = "ImageRelativePath")]
-        public string ImageRelativePath { get; set; }
+        [Display(Name = "PhotoThumbRelativePath")]
+        public string PhotoThumbRelativePath { get; set; }
 
-        [Required]
-        [DataType(DataType.ImageUrl)]
-        [Display(Name = "ImageFullUrl")]
-        public string ImageFullUrl { get; set; }
-        
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name ="OutputDir")]
-        public string OutputDir { get; set; }
     }
 }

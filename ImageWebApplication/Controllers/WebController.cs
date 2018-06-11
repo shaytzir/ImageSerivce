@@ -33,8 +33,12 @@ namespace ImageWebApplication.Controllers
         public ActionResult MainView()
         {
             ViewBag.Status = imageWeb.Status;
-            appConfig.WaitWithBlock();
+            if (imageWeb.Status.Equals("On") && appConfig.InitDone==false)
+            {
+                appConfig.WaitWithBlock();
+            }
             ViewBag.NumOfPhotos = appConfig.NumOfPhotos;
+            //ViewBag.NumOfPhotos = photos.PhotosNum;
             return View(imageWeb);
         }
 
@@ -42,13 +46,19 @@ namespace ImageWebApplication.Controllers
         [HttpGet]
         public ActionResult Photos()
         {
+            photos.PhotosList.Clear();
             photos.GetAllPhotos(appConfig.OutputDir);
-            return View(photos.ImageList);
+            return View(photos.PhotosList);
         }
 
-        public ActionResult DeletePhotoOK(string thumbUrl)
+        public ActionResult PhotoDelete(string fullUrlThumb, string dir)
         {
-           // photos.DeletePhoto(thumbUrl);
+            PhotoInfo photoToDelete = new PhotoInfo(fullUrlThumb,dir);
+            return View(photoToDelete);
+        }
+        public ActionResult DeletePhotoOK(string fullThumbUrl)
+        {
+            photos.DeletePhoto(fullThumbUrl);
             return RedirectToAction("Photos");
 
         }
