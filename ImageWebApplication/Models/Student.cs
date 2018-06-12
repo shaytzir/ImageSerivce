@@ -6,6 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ImageWebApplication.Models
 {
+    /// <summary>
+    /// student info class
+    /// </summary>
     public class Student
     {
         static int count = 0;

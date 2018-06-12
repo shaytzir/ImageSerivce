@@ -26,6 +26,11 @@ namespace ImageWebApplication.Models
             SetProp(client, students);
         }
 
+        /// <summary>
+        /// Sets the property of the connection and students
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="students">The students.</param>
         public void SetProp(WebClient client, string[] students)
         {
             if (!m_Connect)
@@ -48,18 +53,6 @@ namespace ImageWebApplication.Models
                 student.IDNum = details[2];
                 //Add the studetnt to the list.
                 Students.Add(student);
-            }
-        }
-        public void PhotosNum(string imagesPath)
-        {
-            NumOfPhotos = 0;
-            if (imagesPath != null)
-            {
-                string path = Path.Combine(imagesPath, "Thumbnails");
-                if (Directory.Exists(path))
-                {
-                    NumOfPhotos = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories).Count();
-                }
             }
         }
 

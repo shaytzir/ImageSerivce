@@ -25,7 +25,9 @@ namespace ImageWebApplication.Models
         /// </summary>
         public AppConfig()
         {
+            //object to use as a lock
             this.objLock = new object();
+            //the first initialize of the condig wasnt done yet
             this.InitDone = false;
             this.client = WebClient.Instance;
             this.Handlers = new ObservableCollection<string>();
@@ -33,12 +35,20 @@ namespace ImageWebApplication.Models
             client.Comm.InfoFromServer += HandleServerCommands;
         }
 
+        /// <summary>
+        /// Asks to remove handler. ask the server to remove and blocks untill
+        /// </summary>
+        /// <param name="jsonCommandInfo">The json command information.</param>
         public void AskToRemoveHandler(string jsonCommandInfo)
         {
             this.client.Comm.SendCommand(jsonCommandInfo);
+            //waits for the function coming from event to end (making it a sync communication)
             WaitWithBlock();
         }
 
+        /// <summary>
+        /// Waits on the special object
+        /// </summary>
         public void WaitWithBlock()
         {
             lock (this.objLock)
@@ -48,6 +58,9 @@ namespace ImageWebApplication.Models
             return;
         }
 
+        /// <summary>
+        /// Pulses the blocking.
+        /// </summary>
         public void PulseTheBlocking()
         {
             lock (this.objLock)
@@ -62,21 +75,18 @@ namespace ImageWebApplication.Models
         /// <param name="commandFromSrv">The command the server sent</param>
         private void HandleServerCommands(object sender, string commandFromSrv)
            {
-               //new Task(() =>
-               //{
-                   JObject json = JsonConvert.DeserializeObject<JObject>(commandFromSrv);
-                   int commandID = (int)json["CommandID"];
-                   //if it send the configuration info
-                   if (commandID == (int)CommandEnum.GetConfigCommand)
-                   {
-                       UpdateConfig(commandFromSrv);
-                       //if it closed a directory
-                   }
-                   else if (commandID == (int)CommandEnum.CloseCommand)
-                   {
-                       RemoveHandler(commandFromSrv);
-                   }
-              // }).Start();
+            JObject json = JsonConvert.DeserializeObject<JObject>(commandFromSrv);
+            int commandID = (int)json["CommandID"];
+            //if it send the configuration info
+            if (commandID == (int)CommandEnum.GetConfigCommand)
+            {
+                UpdateConfig(commandFromSrv);
+                //if it closed a directory
+            }
+            else if (commandID == (int)CommandEnum.CloseCommand)
+            {
+                RemoveHandler(commandFromSrv);
+            }
            }
 
 
@@ -115,8 +125,6 @@ namespace ImageWebApplication.Models
             JObject json = JsonConvert.DeserializeObject<JObject>(CommandFromSrv);
             try
             {
-                ///Application.Current.Dispatcher.Invoke(new Action(() =>
-                //{
                 this.LogName = (string)json["LogName"];
                 string handlersConnected = (string)json["Handlers"];
                 string[] handlers = handlersConnected.Split(';');
@@ -131,7 +139,9 @@ namespace ImageWebApplication.Models
                 this.OutputDir = (string)json["OutputDir"];
                 this.ThumbnailSize = (string)json["ThumbSize"];
                 this.NumOfPhotos = getPhotosNum();
+                //knowing the first initialize of this model was done
                 this.InitDone = true;
+                //alerting the config building - done
                 this.PulseTheBlocking();
             }
             catch (Exception e)
@@ -140,20 +150,22 @@ namespace ImageWebApplication.Models
             }
         }
 
+        /// <summary>
+        /// Gets the photos number.
+        /// </summary>
+        /// <returns></returns>
         private int getPhotosNum()
         {
             int NumOfPhotos = 0;
-                string path = Path.Combine(this.m_OutputDir, "Thumbnails");
-                if (Directory.Exists(path))
-                {
-                    NumOfPhotos = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories).Count();
-                }
+            string path = Path.Combine(this.OutputDir, "Thumbnails");
+            //counting the files in the thumbnails path
+            if (Directory.Exists(path))
+            {
+                NumOfPhotos = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories).Count();
+            }
             return NumOfPhotos;
-            
+
         }
-
-
-        private string m_OutputDir;
 
         /// <summary>
         /// Gets or sets the output dir.
@@ -161,19 +173,8 @@ namespace ImageWebApplication.Models
         /// <value>
         /// The output dir.
         /// </value>
-        public string OutputDir
-        {
-            get
-            {
-                return m_OutputDir;
-            }
-            set
-            {
-                m_OutputDir = value;
-            }
-        }
+        public string OutputDir { get; set; }
 
-        private string m_LogName;
 
         /// <summary>
         /// Gets or sets the name of the log.
@@ -181,19 +182,8 @@ namespace ImageWebApplication.Models
         /// <value>
         /// The name of the log.
         /// </value>
-        public string LogName
-        {
-            get
-            {
-                return m_LogName;
-            }
-            set
-            {
-                m_LogName = value;
-            }
-        }
+        public string LogName { get; set; }
 
-        private string m_SourceName;
 
         /// <summary>
         /// Gets or sets the name of the source.
@@ -201,19 +191,7 @@ namespace ImageWebApplication.Models
         /// <value>
         /// The name of the source.
         /// </value>
-        public string SourceName
-        {
-            get
-            {
-                return m_SourceName;
-            }
-            set
-            {
-                m_SourceName = value;
-            }
-        }
-
-        private string m_ThumbnailSize;
+        public string SourceName { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the thumbnail.
@@ -221,40 +199,22 @@ namespace ImageWebApplication.Models
         /// <value>
         /// The size of the thumbnail.
         /// </value>
-        public string ThumbnailSize
-        {
-            get
-            {
-                return m_ThumbnailSize;
-            }
-            set
-            {
-                m_ThumbnailSize = value;
-            }
-        }
-
-        public ObservableCollection<string> Handlers { get; set; }
-
-        private string handlerToRemove;
+        public string ThumbnailSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the handlers to remove.
+        /// Gets or sets the handlers.
         /// </summary>
         /// <value>
-        /// The handlers to remove.
+        /// The handlers.
         /// </value>
-        public string _HandlersToRemove
-        {
-            get
-            {
-                return this.handlerToRemove;
-            }
-            set
-            {
-                this.handlerToRemove = value;
-            }
-        }
+        public ObservableCollection<string> Handlers { get; set; }
 
+        /// <summary>
+        /// Gets or sets the number of photos.
+        /// </summary>
+        /// <value>
+        /// The number of photos.
+        /// </value>
         public int NumOfPhotos
         {
             get

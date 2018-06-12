@@ -157,7 +157,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AppConfig.cs" />
-    <Compile Include="Models\Approve.cs" />
     <Compile Include="Models\ImageWeb.cs" />
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\Logs.cs" />

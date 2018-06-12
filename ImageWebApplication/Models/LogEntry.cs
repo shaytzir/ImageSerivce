@@ -6,6 +6,9 @@ using System.Web;
 
 namespace ImageWebApplication.Models
 {
+    /// <summary>
+    /// this class represents an entry of a lof
+    /// </summary>
     public class LogEntry
     {
         public string _Status;

@@ -15,47 +15,58 @@ namespace ImageWebApplication.Controllers
     {
         static AppConfig appConfig = new AppConfig();
         static Logs logs = new Logs();
-        static Approve approve = new Approve();
         static Photos photos = new Photos();
         static ImageWeb imageWeb = new ImageWeb();
         private static string m_handlerToRemove;
-        public object objLock;
 
-
-
-        // GET: First
-        public ActionResult Approve()
-        {
-            return View(approve);
-        }
-
+        /// <summary>
+        /// returns a view for the main window of the project
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult MainView()
         {
             ViewBag.Status = imageWeb.Status;
+            //gets inside condition only in the first time showing this view
             if (imageWeb.Status.Equals("On") && appConfig.InitDone==false)
             {
                 appConfig.WaitWithBlock();
             }
             ViewBag.NumOfPhotos = appConfig.NumOfPhotos;
-            //ViewBag.NumOfPhotos = photos.PhotosNum;
             return View(imageWeb);
         }
 
-
+        /// <summary>
+        /// returns a view for all the photos in the service.
+        /// </summary>
+        /// <returns> the photos view</returns>
         [HttpGet]
         public ActionResult Photos()
         {
+            //reset the old
             photos.PhotosList.Clear();
+            //get all of the photos in the serivce
             photos.GetAllPhotos(appConfig.OutputDir);
             return View(photos.PhotosList);
         }
 
+        /// <summary>
+        /// returns a view which asks if we're sure we want to delete a specific photo
+        /// </summary>
+        /// <param name="fullUrlThumb">The full URL for the photo thumbnail.</param>
+        /// <param name="dir">The output directory of the image.</param>
+        /// <returns></returns>
         public ActionResult PhotoDelete(string fullUrlThumb, string dir)
         {
             PhotoInfo photoToDelete = new PhotoInfo(fullUrlThumb,dir);
             return View(photoToDelete);
         }
+        /// <summary>
+        /// occurs when the user approves to delete a specific photo.
+        /// deletes it and return to the photos view
+        /// </summary>
+        /// <param name="fullThumbUrl">The full thumb URL.</param>
+        /// <returns></returns>
         public ActionResult DeletePhotoOK(string fullThumbUrl)
         {
             photos.DeletePhoto(fullThumbUrl);
@@ -74,15 +85,25 @@ namespace ImageWebApplication.Controllers
             return View(photo);
         }
 
+        /// <summary>
+        /// view for the configuration settings
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Config()
         {
             return View(appConfig);
         }
 
+        /// <summary>
+        /// view the logs
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Logs()
         {
             return View(logs);
         }
+
+
         [HttpGet]
         public JObject GetLogs(string filter)
         {
@@ -90,14 +111,23 @@ namespace ImageWebApplication.Controllers
             return obj;
         }
 
-        public ActionResult ApproveDeleteHandler(string handlerToRemove)
+        /// <summary>
+        /// Approves the delete handler.
+        /// </summary>
+        /// <param name="handlerToRemove">The handler to remove.</param>
+        /// <returns></returns>
+        public ActionResult Approve(string handlerToRemove)
         {
             m_handlerToRemove = handlerToRemove;
-            return RedirectToAction("Approve");
+            return View();
 
         }
-       
-       public ActionResult DeleteHandlerOK()
+
+        /// <summary>
+        /// occurs when the user approves he wants to delete the handler
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DeleteHandlerOK()
         {
             JObject json = new JObject();
             json["CommandID"] = (int)CommandEnum.CloseCommand;
@@ -105,112 +135,5 @@ namespace ImageWebApplication.Controllers
             appConfig.AskToRemoveHandler(JsonConvert.SerializeObject(json));
             return RedirectToAction("Config");
         }
-
-
-        /*[HttpGet]
-        public JObject GetStudent()
-        {
-            JObject data = new JObject();
-            data["FirstName"] = "Kuky";
-            data["LastName"] = "Mopy";
-            return data;
-        }*/
-
-        /*[HttpPost]
-        public JObject GetStudent(string name, int salary)
-        {
-            foreach (var empl in Students)
-            {
-                if (empl.IDNum > salary || name.Equals(name))
-                {
-                    JObject data = new JObject();
-                    data["FirstName"] = empl.FirstName;
-                    data["LastName"] = empl.LastName;
-                    data["Salary"] = empl.IDNum;
-                    return data;
-                }
-            }
-            return null;
-        }*/
-
-        // GET: First/Details
-        /*public ActionResult Details()
-        {
-            return View(Students);
-        }
-
-        // GET: First/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: First/Create
-        [HttpPost]
-        public ActionResult Create(Student emp)
-        {
-            try
-            {
-                Students.Add(emp);
-
-                return RedirectToAction("Details");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: First/Edit/5
-        public ActionResult Edit(int id)
-        {
-            foreach (Student emp in Students)
-            {
-                if (emp.ID.Equals(id))
-                {
-                    return View(emp);
-                }
-            }
-            return View("Error");
-        }
-
-        // POST: First/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, Student empT)
-        {
-            try
-            {
-                foreach (Student emp in Students)
-                {
-                    if (emp.ID.Equals(id))
-                    {
-                        emp.copy(empT);
-                        return RedirectToAction("Index");
-                    }
-                }
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return RedirectToAction("Error");
-            }
-        }
-
-        // GET: First/Delete/5
-        public ActionResult Delete(int id)
-        {
-            int i = 0;
-            foreach (Student emp in Students)
-            {
-                if (emp.ID.Equals(id))
-                {
-                    Students.RemoveAt(i);
-                    return RedirectToAction("Details");
-                }
-                i++;
-            }
-            return RedirectToAction("Error");
-        }*/
     }
 }
