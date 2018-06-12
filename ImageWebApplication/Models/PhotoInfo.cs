@@ -7,18 +7,28 @@ using System.Web;
 
 namespace ImageWebApplication.Models
 {
+    /// <summary>
+    /// the class saves all information needed for a single photo
+    /// </summary>
     public class PhotoInfo
     {
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="thumbFullPath">The thumb full path.</param>
+        /// <param name="outputDirName">Name of the output dir.</param>
         public PhotoInfo(string thumbFullPath, string outputDirName) 
         {
             try
             {
                 OutputDir = outputDirName;
                 PhotoThumbFullUrl = thumbFullPath;
+                //same url without the "Thumbnails"
                 PhotoFullUrl = thumbFullPath.Replace(@"Thumbnails\", string.Empty);
                 PhotoName = Path.GetFileNameWithoutExtension(PhotoThumbFullUrl);
                 Month = Path.GetFileNameWithoutExtension(Path.GetDirectoryName(PhotoThumbFullUrl));
                 Year = Path.GetFileNameWithoutExtension(Path.GetDirectoryName((Path.GetDirectoryName(PhotoThumbFullUrl))));
+                //creating relative paths for both photo and its thumbnail
                 PhotoThumbRelativePath = @"~\" + Path.GetFileName(outputDirName) + thumbFullPath.Replace(outputDirName, string.Empty);
                 PhotoRelativePath = PhotoThumbRelativePath.Replace(@"Thumbnails\", string.Empty);
             }
