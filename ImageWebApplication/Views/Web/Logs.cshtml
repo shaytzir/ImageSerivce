@@ -2,33 +2,29 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 @{
-    ViewBag.Title = "Logs";
+        ViewBag.Title = "Logs";
 }
 
 <h2>Logs</h2>
 
+<div class="col-lg-12 col-md-12 col-xs-12" id="divPartial">
+     @Html.Partial("LogsTable", Model.data)
+</div>
+
+
 <div>
-        <table>
-            <tr>
-                <td><p type="text" id="prodStatus" size="5"></p></td>
-            </tr>
-            <tr>
-                <td><p type="text" id="prodMessage" size="5"></p></td>
-            </tr>
-        </table>
     <input type="text" id="txtFilterID" size="5" />
     <button type="button" id="btnFilter" style="margin:10px">OK</button>
 </div>
 
 <script>
-    $("#btnFilter").click(function () {
-        var input = {
-            filter: $("#txtFilterID").val(),
-        };
-        $.getJSON("@Url.Action("GetLogs")", input, function (logs) {
-
-            $("#prodStatus").text(logs.Status);
-                $("#prodMessage").text(logs.Message);
-            });
-    });
-    </script>
+    $("#btnFilter").click(
+        function () {
+            var input = { filter: $("#txtFilterID").val() };
+            $.get("@Url.Action("FilterLogs")", input,
+                function (logs) {
+                    $('#divPartial').html(logs);
+                }
+            );
+        });
+</script>

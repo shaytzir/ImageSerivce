@@ -181,6 +181,7 @@
     <Content Include="Views\Web\Photos.cshtml" />
     <Content Include="Views\Web\PhotoView.cshtml" />
     <Content Include="Views\Web\PhotoDelete.cshtml" />
+    <Content Include="Views\Web\LogsTable.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

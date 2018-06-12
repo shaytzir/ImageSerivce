@@ -18,14 +18,14 @@ namespace ImageWebApplication.Models
     {
         private WebClient client;
         public ObservableCollection<LogEntry> LogList;
+        public List<LogEntry> data { get; set; }
         public Logs()
         {
-            //this.objLock = new object();
             this.client = WebClient.Instance;
             client.Comm.InfoFromServer += HandleServerCommands;
             this.LogList = new ObservableCollection<LogEntry>();
             this._Logs = new ObservableCollection<LogEntry>();
-            return;
+            this.data = new List<LogEntry>();
         }
 
         private void HandleServerCommands(object sender, string commandFromSrv)
@@ -50,10 +50,23 @@ namespace ImageWebApplication.Models
             try
             {
                     //creat log list to output.
-                    //this._Logs = new List<LogEntry>();
                     for (int i = 0; i < LogList.Count; i++)
                     {
-                        _Logs.Insert(0, new LogEntry() { Status = LogList[i].Status.ToString(), Message = (string)LogList[i].Message });
+                    LogEntry log = null;
+                    switch (LogList[i].Status)
+                    {
+                        case "0":
+                            log = new LogEntry() { Status = "INFO", Message = (string)LogList[i].Message };
+                            break;
+                        case "1":
+                            log = new LogEntry() { Status = "WARNNING", Message = (string)LogList[i].Message };
+                            break;
+                        case "2":
+                            log = new LogEntry() { Status = "FAIL", Message = (string)LogList[i].Message };
+                            break;
+                    }
+                     _Logs.Insert(0, log);
+                     data.Add(log);
                     }
             }
             catch (Exception e)
@@ -62,59 +75,33 @@ namespace ImageWebApplication.Models
             }
         }
         public ObservableCollection<LogEntry> _Logs { get; set; }
-        /*[Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "_Logs")]
-        public List<LogEntry> _Logs { get; set; }*/
-
-        /*[HttpPost]
-        public void GetLogInfo()
+       
+        public List<LogEntry> FilterLogs(string filter)
         {
-            ObservableCollection<LogEntry> logInfo = new ObservableCollection<LogEntry>();
-            foreach(LogEntry log in _Logs)
-            {
-                if (log.Status == "INFO")
-                {
-                    logInfo.Add(log);
-                }
-            }
-            this._Logs = logInfo;
-        }*/
-
-        public List<LogEntry> GetLogInfo(string filter)
-        {
-            List<LogEntry> data = new List<LogEntry>();
+            data = new List<LogEntry>();
             foreach (LogEntry log in _Logs)
             {
                 switch (filter)
                 {
                     case ("info"):
-                        if (log.Status == "0")
+                        if (log.Status == "INFO")
                         {
                             data.Add(log);
-                            //data["Status"] = "INFO";
-                            //data["Message"] = log.Message;
                         }
                         break;
-                    case (null):
+                    case (""):
                         data.Add(log);
-                        //data["Status"] = log.Status;
-                        //data["Message"] = log.Message;
                         break;
                     case ("warning"):
-                        if (log.Status == "1")
+                        if (log.Status == "WARNNING")
                         {
                             data.Add(log);
-                            //data["Status"] = "WARNING";
-                            //data["Message"] = log.Message;
                         }
                         break;
                     case ("fail"):
-                        if (log.Status == "2")
+                        if (log.Status == "FAIL")
                         {
                             data.Add(log);
-                            //data["Status"] = "FAIL";
-                            //data["Message"] = log.Message;
                         }
                         break;
                 }
