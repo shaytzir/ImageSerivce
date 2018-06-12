@@ -100,6 +100,7 @@ namespace ImageWebApplication.Controllers
         /// <returns></returns>
         public ActionResult Logs()
         {
+            logs.RefreshLogs();
             return View(logs);
         }
 

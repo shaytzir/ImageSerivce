@@ -12,8 +12,8 @@ using System.Threading;
 using System.Web.Mvc;
 
 namespace ImageWebApplication.Models
-{ 
-    
+{
+
     public class Logs
     {
         private WebClient client;
@@ -49,9 +49,9 @@ namespace ImageWebApplication.Models
             this.LogList = JsonConvert.DeserializeObject<ObservableCollection<LogEntry>>(CommandFromSrv);
             try
             {
-                    //creat log list to output.
-                    for (int i = 0; i < LogList.Count; i++)
-                    {
+                //creat log list to output.
+                for (int i = 0; i < LogList.Count; i++)
+                {
                     LogEntry log = null;
                     switch (LogList[i].Status)
                     {
@@ -65,9 +65,10 @@ namespace ImageWebApplication.Models
                             log = new LogEntry() { Status = "FAIL", Message = (string)LogList[i].Message };
                             break;
                     }
-                     _Logs.Insert(0, log);
-                     data.Add(log);
-                    }
+                    _Logs.Insert(0, log);
+                  
+
+                }
             }
             catch (Exception e)
             {
@@ -75,13 +76,36 @@ namespace ImageWebApplication.Models
             }
         }
         public ObservableCollection<LogEntry> _Logs { get; set; }
+
+        public void RefreshLogs()
+        {
+            for (int i = 0; i < LogList.Count; i++)
+            {
+                LogEntry log = null;
+                switch (LogList[i].Status)
+                {
+                    case "0":
+                        log = new LogEntry() { Status = "INFO", Message = (string)LogList[i].Message };
+                        break;
+                    case "1":
+                        log = new LogEntry() { Status = "WARNNING", Message = (string)LogList[i].Message };
+                        break;
+                    case "2":
+                        log = new LogEntry() { Status = "FAIL", Message = (string)LogList[i].Message };
+                        break;
+                }
+                data.Add(log);
+            }
+        }
+    
        
         public List<LogEntry> FilterLogs(string filter)
         {
+            string filterlower = filter.ToLower();
             data = new List<LogEntry>();
             foreach (LogEntry log in _Logs)
             {
-                switch (filter)
+                switch (filterlower)
                 {
                     case ("info"):
                         if (log.Status == "INFO")
