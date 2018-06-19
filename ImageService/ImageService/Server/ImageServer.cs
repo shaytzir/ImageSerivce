@@ -10,9 +10,7 @@ using ImageService.Controller;
 using ImageService.Logging;
 using ImageService.Modal;
 using Newtonsoft.Json;
-using Infrastructure.Enums;
 using Infrastructure.Modal;
-using Infrastructure.Event;
 
 namespace ImageService.Server
 {
@@ -25,6 +23,7 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private TcpTimeServer tcpServer;
+        private TcpAndroidServer androidServer;
         private string[] seperatedPaths;
         #endregion
 
@@ -66,9 +65,11 @@ namespace ImageService.Server
             //creates the tcpServer and register to it's events of getting a new client and reciving commands
             new Task(() =>
             {
+                this.androidServer = new TcpAndroidServer(this.seperatedPaths);
                 this.tcpServer = new TcpTimeServer();
                 this.tcpServer.NewClientConnected += this.SendSettingsAndLog;
                 this.tcpServer.PassInfoFromClientHandlerToServer += this.GetCommandFromService;
+                this.androidServer.Start();
                 this.tcpServer.Start();
             }).Start();
         }

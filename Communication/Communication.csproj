@@ -48,7 +48,10 @@
   <ItemGroup>
     <Compile Include="ClientHandler.cs" />
     <Compile Include="IClientHandler.cs" />
+    <Compile Include="ITcpAndroidHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TcpAndroidHandler.cs" />
+    <Compile Include="TcpAndroidServer.cs" />
     <Compile Include="TcpTimeClient .cs" />
     <Compile Include="TcpTimeServer.cs" />
   </ItemGroup>
