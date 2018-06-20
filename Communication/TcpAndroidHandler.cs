@@ -43,6 +43,9 @@ namespace Communication
                         string[] sizeAndName = message.Split(' ');
                         int size = int.Parse(sizeAndName[0]);
                         string name = sizeAndName[1];
+                        byte[] confirm = new byte[1];
+                        confirm[0] = 1;
+                        stream.Write(confirm, 0, confirm.Length);
                         bytesArr = new byte[size];
                         int readnumFirst = stream.Read(bytesArr, 0, bytesArr.Length);
                         int numRead = readnumFirst;
@@ -65,8 +68,8 @@ namespace Communication
 
         private void saveImageInHandler(byte[] bytesArr, string name)
         {
-            using (var ms = new MemoryStream(bytesArr))
-            {
+            //using (var ms = new MemoryStream(bytesArr))
+           // {
                 // Put the new image in one of our handlers
                 try
                 {
@@ -76,7 +79,7 @@ namespace Communication
                 {
                     string msg = "oh no i die debug";
                 }
-            }
+            
         }
 
         public void transferBytes(byte[] origin, byte[] toCopy, int start)

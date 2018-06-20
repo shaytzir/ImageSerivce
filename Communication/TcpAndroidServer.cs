@@ -51,7 +51,7 @@ namespace Communication
                     try
                     {
                         TcpClient client = listener.AcceptTcpClient();
-                        ITcpAndroidHandler newHandler = new TcpAndroidHandler(client, paths[0]);
+                        ITcpAndroidHandler newHandler = new TcpAndroidHandler(client, paths[1]);
                         m_mutex.WaitOne();
                         //add it to the list
                         ch.Add(newHandler);

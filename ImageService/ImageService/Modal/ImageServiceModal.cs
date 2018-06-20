@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace ImageService.Modal
 {
@@ -92,6 +93,7 @@ namespace ImageService.Modal
                 {
                     result = true;
                     //Extract file Year and Month
+                    Thread.Sleep(300);
                     DateTime creationTime = GetDateTakenFromImage(path);
                     //create string of the year
                     string yearCreation = string.Empty;
@@ -124,8 +126,9 @@ namespace ImageService.Modal
             }
             catch (Exception e)
             {
+                
                 result = false;
-                message = e.Message;
+                message = e.Message + "debug its here as u thought " +e.Source + " the method is " + e.TargetSite + " stack " + e.StackTrace;
                 return message;
             }
             //in any other case the transfer worked - log it
@@ -171,7 +174,7 @@ namespace ImageService.Modal
         /// </summary>
         /// <param name="path">original file path</param>
         /// <returns>a date</returns>
-        public static DateTime GetDateTakenFromImage(string path)
+        public  DateTime GetDateTakenFromImage(string path)
         {
             DateTime creation;
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
