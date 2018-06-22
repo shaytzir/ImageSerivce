@@ -19,6 +19,11 @@ namespace Communication
         private string path;
         private static Mutex m_mutex = new Mutex();
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="acceptedOnServer"> the tcp client we handle</param>
+        /// <param name="path">path of the handler to save to</param>
         public TcpAndroidHandler(TcpClient acceptedOnServer, string path)
         {
             this.client = acceptedOnServer;
@@ -29,6 +34,9 @@ namespace Communication
             connected = true;
         }
 
+        /// <summary>
+        /// handles the client, read information and all bytes of the images
+        /// </summary>
         public void HandleClient()
         {
             new Task(() =>
@@ -37,16 +45,20 @@ namespace Communication
                 {
                     try
                     {
+                        //reading from client
                         byte[] bytesArr = new byte[4096];
                         int res = stream.Read(bytesArr, 0, bytesArr.Length);
                         string message = Encoding.ASCII.GetString(bytesArr, 0, res);
+                        //spliting into size in bytes and name of file
                         string[] sizeAndName = message.Split(' ');
                         int size = int.Parse(sizeAndName[0]);
                         string name = sizeAndName[1];
                         byte[] confirm = new byte[1];
                         confirm[0] = 1;
+                        //letting the client know we got the infortmation
                         stream.Write(confirm, 0, confirm.Length);
                         bytesArr = new byte[size];
+                        //reading the bytes of the images
                         int readnumFirst = stream.Read(bytesArr, 0, bytesArr.Length);
                         int numRead = readnumFirst;
                         while (numRead < size)
@@ -54,51 +66,40 @@ namespace Communication
                             int num = stream.Read(bytesArr, numRead, bytesArr.Length-numRead);
                             numRead += num;
                         }
-                        saveImageInHandler(bytesArr, name);
+                        SaveImageInHandler(bytesArr, name);
 
                     }
                     catch (Exception e)
                     {
-                        string msg = "oh no  debug";
-                        //Close();
+                        Close();
                     }
                 }
             }).Start();
         }
 
-        private void saveImageInHandler(byte[] bytesArr, string name)
+        /// <summary>
+        /// saving the image into the right directory
+        /// </summary>
+        /// <param name="bytesArr"><the image bytes/param>
+        /// <param name="name">name of the image</param>
+        private void SaveImageInHandler(byte[] bytesArr, string name)
         {
-            //using (var ms = new MemoryStream(bytesArr))
-           // {
-                // Put the new image in one of our handlers
-                try
-                {
-                    File.WriteAllBytes(path + "\\" + name, bytesArr);
-                }
-                catch (Exception e)
-                {
-                    string msg = "oh no i die debug";
-                }
-            
-        }
-
-        public void transferBytes(byte[] origin, byte[] toCopy, int start)
-        {
-            for (int i = start; i < origin.Length; i++)
+            try
             {
-                origin[i] = toCopy[i - start];
+                File.WriteAllBytes(path + "\\" + name, bytesArr);
+            }
+            catch (Exception e)
+            {
+
             }
         }
 
-        public void byteArrayToImage(byte[] byteArray, string picName)
+        public void Close()
         {
-            //Image image = (Bitmap)((new ImageConverter()).ConvertFrom(byteArray));
-            using (var ms = new MemoryStream(byteArray))
-            {
-                //Image image = Image.FromStream(ms);
-                //string imgName = image.
-                File.WriteAllBytes(path + "\\" + picName, byteArray);
-            }
+            this.client.Close();
+            this.connected = false;
+            this.reader.Close();
+            this.writer.Close();
 
         }
     }

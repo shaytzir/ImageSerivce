@@ -9,5 +9,6 @@ namespace Communication
     interface ITcpAndroidHandler
     {
         void HandleClient();
+        void Close();
     }
 }

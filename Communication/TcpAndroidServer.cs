@@ -14,8 +14,6 @@ namespace Communication
         TcpListener listener;
         private List<ITcpAndroidHandler> ch;
         private static Mutex m_mutex = new Mutex();
-        public event EventHandler<IClientHandler> NewClientConnected;
-        public event EventHandler<string> PassInfoFromClientHandlerToServer;
         private bool running;
         private string IP;
         private int port;
@@ -56,9 +54,6 @@ namespace Communication
                         //add it to the list
                         ch.Add(newHandler);
                         m_mutex.ReleaseMutex();
-                        //let the main server know a new client connected
-                        //NewClientConnected?.Invoke(this, newHandler);
-                        //start handeling the new client
                         newHandler.HandleClient();
                     }
                     catch (SocketException e)
@@ -72,45 +67,6 @@ namespace Communication
 
         }
 
-        /// <summary>
-        /// Removes the handler from list.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-     /*   private void RemoveHandlerFromList(object sender, EventArgs e)
-        {
-            IClientHandler handlerToRemove = (IClientHandler)sender;
-            m_mutex.WaitOne();
-            this.ch.Remove(handlerToRemove);
-            m_mutex.ReleaseMutex();
-        }*/
-
-        /// <summary>
-        /// Sends a message from the server to all clients.
-        /// </summary>
-        /// <param name="info">The information.</param>
-      /*  public void SendToAllClients(string info)
-        {
-            Task task = new Task(() =>
-            {
-                m_mutex.WaitOne();
-                foreach (IClientHandler handler in ch)
-                {
-                    try
-                    {
-                        handler.SendCommand(info);
-
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
-                m_mutex.ReleaseMutex();
-            });
-            task.Start();
-
-        }*/
 
         /// <summary>
         /// Closes this instance.
@@ -122,7 +78,7 @@ namespace Communication
             Task task = new Task(() =>
             {
                 m_mutex.WaitOne();
-                foreach (IClientHandler handler in ch)
+                foreach (ITcpAndroidHandler handler in ch)
                 {
                     try
                     {

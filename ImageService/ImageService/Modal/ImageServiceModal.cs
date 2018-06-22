@@ -128,7 +128,7 @@ namespace ImageService.Modal
             {
                 
                 result = false;
-                message = e.Message + "debug its here as u thought " +e.Source + " the method is " + e.TargetSite + " stack " + e.StackTrace;
+                message = e.Message;
                 return message;
             }
             //in any other case the transfer worked - log it
